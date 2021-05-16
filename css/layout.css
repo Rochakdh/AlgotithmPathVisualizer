@@ -1,0 +1,23 @@
+.menu {
+    height: 90px;
+    background-color: aquamarine;
+    width: 100%;
+}
+.menu-list{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+}
+li {
+    list-style: none;
+}
+.grids{
+    margin: 40px auto;
+    display: grid;
+    gap: 0px;
+    column-gap: 0;
+}
+.box{
+    margin: -1px;
+}
