@@ -35,7 +35,30 @@ startEndNodes = function (){
 }
 
 startEndNodes();
-addEventListener('click',function(e){
-    console.log(e.target.id)
+
+
+
+checkDraggedStartEnd = function(eventThrown){
+    if (
+        eventThrown.target.id != `node${startNode}` &&  eventThrown.target.id != `node${endNode}` 
+        && eventThrown.target.className === 'box'
+        ){
+            return true
+        }
+    return false
+}
+
+document.addEventListener('mouseup',function(event){
+    console.log(event.target.className)
+    if (checkDraggedStartEnd(event)){
+        event.target.classList.add('blocked')
+    }
 })
+
+
+document.addEventListener("dragover", function(event) {
+    if (checkDraggedStartEnd(event)){
+        event.target.classList.add('blocked')
+    }
+}, false);
 

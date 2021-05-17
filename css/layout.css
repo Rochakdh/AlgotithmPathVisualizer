@@ -27,3 +27,6 @@ li {
 .end{
     background-color: rebeccapurple;
 }
+.blocked {
+    background-color: black;
+}
