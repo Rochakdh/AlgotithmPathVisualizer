@@ -18,15 +18,4 @@ li {
     gap: 0px;
     column-gap: 0;
 }
-.box{
-    margin: -1px;
-}
-.start{
-    background-color: green;
-}
-.end{
-    background-color: rebeccapurple;
-}
-.blocked {
-    background-color: black;
-}
+
