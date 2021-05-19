@@ -25,7 +25,7 @@ for (var index = 0 ; index < (rows*columns); index++){
     box.id = 'node' + index
     box.style.width =  boxSize + 'px'
     box.style.height = boxSize + 'px'
-    box.innerHTML = index
+    // box.innerHTML = index
     box.setAttribute('distance',distance)
     box.setAttribute('isVisited',false)
     // box.setAttribute('isblocked',isBlocked)
@@ -84,71 +84,113 @@ let rightNode;
 let upNode;
 let downNode;
 
-boundaryElements = function(){
-  let boundaryArray = []
+getBoundary = function(){
+  let boundaryNode = []
+  let additional = 0
+  for (let index = 0 ; index < columns ; index++){
+    boundaryNode.push(index)
+  }
+  for (let index = 0 ; index < rows ; index++){
+    additional += columns
+    boundaryNode.push(additional)
+    boundaryNode.push(additional-1)
+  }
+  boundaryNode.pop()
+  return boundaryNode
+}
+
+checkBoundary = function(checkElement)
+{
+    let getBoundaryArray = getBoundary()
+    if (getBoundaryArray.includes(checkElement)){
+        return true
+    }
+    else{
+        return false
+    }
 }
 
 
 getNeighbours = function(currentNode){
-    let neighbouringArray = []
+    let neighboour = []
+    // let getBoundaryArray = getBoundary()
     leftNode = currentNode - 1
     rightNode = currentNode + 1
-    if (currentNode > columns){
-        upNode = currentNode - columns
+    upNode = currentNode - columns
+    downNode = currentNode + columns
+    // if (upNode > -1 ){
+        neighboour.push(upNode)
+    // }
+    if (!rightBoundary(rightNode)){
+        neighboour.push(rightNode)
     }
-    if (currentNode < rows * columns - columns){
-      downNode = currentNode + columns 
-    }
-    
-    let allNodes = [upNode,rightNode,downNode,leftNode]
-    allNodes.forEach(function(nodes){
-      if (node === node-node){}
-      
-      
-    })
-
-  return allNodes
-    
+    // if (downNode<1275){
+        neighboour.push(downNode)
+    // }
+    if (!leftBoundary(leftNode)){
+        neighboour.push(leftNode)
+     }
+    return neighboour
 }
 
-
+let animate;
 dijkstra = function(){
     let getStartNodeById = document.getElementById('node'+ startNode)
     getStartNodeById.setAttribute('distance',0)
     let previousDistance = 0
     let getNeighbourArray = getNeighbours(startNode)
-    console.log(getNeighbourArray)
     flag = 0
-    // !getNeighbourArray.includes(endNode)
-    while (flag < 4){
-        console.log('yess')
-        previousDistance += 1
-        newArray = []
-        getNeighbourArray.forEach(element => {
-            console.log(`node${element}`)
-            let getNeighbourNodeById = document.getElementById('node'+element)
-            console.log(getNeighbourNodeById)
-            console.log(getNeighbourNodeById.isVisited)
-            console.log(!!getNeighbourNodeById.getAttribute('isVisited'))
-            if ((!! (getNeighbourNodeById.getAttribute('isVisited'))) &&  
-              element !== startNode && element !== endNode
-            )
-            {
-                getNeighbourNodeById.setAttribute('distance',previousDistance)
-                getNeighbourNodeById.setAttribute('isVisited',true)
-                getNeighbourNodeById.style.background='yellow'
-                getNeighboursOfNewElemnet = getNeighbours(element)
-                getNeighboursOfNewElemnet.forEach(function(newNeighbours){
-                  newArray.push(newNeighbours)
-                })
-            }
+    let visited = []
+    while (flag < 25){
+        animate = setTimeout(function(){
+          previousDistance += 1
+          newArray = []
+          getNeighbourArray.forEach(element => {
+            console.log(element)
+            let getNeighbourNodeById = document.getElementById('node'+ element)
+            getNeighbourNodeById.setAttribute('distance',previousDistance)
+            getNeighbourNodeById.setAttribute('isVisited',true)
+            visited.push(element)
+            getNeighboursOfNewElemnet = getNeighbours(element)
+            getNeighboursOfNewElemnet.forEach(function(newNeighbours){
+            // checkNotVisited = visited.includes(element)
+                if (newNeighbours!==startNode && newNeighbours!==endNode && !visited.includes(newNeighbours)){
+                    newArray.push(newNeighbours)
+                }
+            })
         });
-  
-        getNeighbourArray = newArray
-        console.log(newArray,getNeighbourArray)
+        getNeighbourArray = newArray.filter(e => -1 < e && e < 1275 && !visited.includes(e))
+        console.log(getNeighbourArray,newArray)
+        console.log(visited)
+        },10)
         flag ++;
-    } 
+    }
+    clearInterval(animate) 
 }
 dijkstra() 
 
 
+function rightBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    const rowPosition = Math.floor(index / colCount);
+    console.log(rowPosition,colPosition)
+    if (colPosition==(colCount-1)) {
+        return true
+    } else {
+        return false
+    } 
+}
+
+function leftBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    const rowPosition = Math.floor(index / colCount);
+    console.log(rowPosition,colPosition)
+    if (colPosition==0) {
+        return true
+    } else {
+        return false
+    } 
+}
+ 

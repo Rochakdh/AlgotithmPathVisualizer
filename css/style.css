@@ -10,3 +10,7 @@
 .blocked {
     background-color: black;
 }
+
+div[isVisited="true"] {
+    background-color: rgb(47, 169, 218);
+}
