@@ -112,69 +112,77 @@ checkBoundary = function(checkElement)
 
 
 getNeighbours = function(currentNode){
+    let leftFlag = 0
+    let rightFlag = 0
     let neighboour = []
-    // let getBoundaryArray = getBoundary()
     leftNode = currentNode - 1
     rightNode = currentNode + 1
     upNode = currentNode - columns
     downNode = currentNode + columns
-    // if (upNode > -1 ){
-        neighboour.push(upNode)
-    // }
-    if (!rightBoundary(rightNode)){
+    neighboour.push(upNode)
+    if (!rightBoundary(rightNode) && rightFlag === 0){
         neighboour.push(rightNode)
     }
-    // if (downNode<1275){
-        neighboour.push(downNode)
-    // }
-    if (!leftBoundary(leftNode)){
+    neighboour.push(downNode)
+    if (!leftBoundary(leftNode) && leftFlag < 1){
         neighboour.push(leftNode)
-     }
+    }
     return neighboour
 }
 
-let animate;
-dijkstra = function(){
-    let getStartNodeById = document.getElementById('node'+ startNode)
-    getStartNodeById.setAttribute('distance',0)
-    let previousDistance = 0
-    let getNeighbourArray = getNeighbours(startNode)
-    flag = 0
-    let visited = []
-    while (flag < 25){
-        animate = setTimeout(function(){
-          previousDistance += 1
-          newArray = []
-          getNeighbourArray.forEach(element => {
-            console.log(element)
-            let getNeighbourNodeById = document.getElementById('node'+ element)
-            getNeighbourNodeById.setAttribute('distance',previousDistance)
-            getNeighbourNodeById.setAttribute('isVisited',true)
-            visited.push(element)
-            getNeighboursOfNewElemnet = getNeighbours(element)
-            getNeighboursOfNewElemnet.forEach(function(newNeighbours){
-            // checkNotVisited = visited.includes(element)
-                if (newNeighbours!==startNode && newNeighbours!==endNode && !visited.includes(newNeighbours)){
-                    newArray.push(newNeighbours)
-                }
-            })
-        });
-        getNeighbourArray = newArray.filter(e => -1 < e && e < 1275 && !visited.includes(e))
-        console.log(getNeighbourArray,newArray)
-        console.log(visited)
-        },10)
-        flag ++;
-    }
-    clearInterval(animate) 
+getNodeDiv = function(node){
+    return document.getElementById('node'+ node)
 }
-dijkstra() 
 
+nonVisited = function(){
+    let noneVisited = []
+    for (var index = 0 ; index < (rows*columns); index++){
+        noneVisited.push(index)
+    }
+    return noneVisited
+}
+
+dijkstra = function(){
+    let notVistedNode = nonVisited()
+    let startNodeDiv = getNodeDiv(startNode)
+    distance = 0
+    startNodeDiv.setAttribute('distance',distance)
+    currentNode = startNode
+    notVistedNode = notVistedNode.filter(e=>e !== currentNode)
+    let queue = []
+    neighbourOfCurrentNode = getNeighbours(currentNode)
+    neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < 1275)
+    j = 1
+    while(j<65){
+        animate = setTimeout(function(){
+        distance = distance + 1
+        neighbourOfCurrentNode.forEach(element => {
+            console.log(element)
+            getNeighbourDiv = getNodeDiv(element)
+            getNeighbourDiv.setAttribute('distance',distance)
+            getNeighbourDiv.setAttribute('isVisited',true)
+            newNeighbours = getNeighbours(element)
+            newNeighbours.forEach(function(individualNeighbour){
+                queue.push(individualNeighbour)
+            })
+            notVistedNode = notVistedNode.filter(e=>e !== element)
+        });
+        queue = queue.filter(function(elem, index, self) {
+            return index === self.indexOf(elem);
+        })
+        neighbourOfCurrentNode = queue.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
+        console.log(queue)
+        },90*j)
+        j++
+    }
+    clearInterval(animate)
+}
+dijkstra()
 
 function rightBoundary(index) {
     colCount = columns
     const colPosition = index % colCount;
     const rowPosition = Math.floor(index / colCount);
-    console.log(rowPosition,colPosition)
     if (colPosition==(colCount-1)) {
         return true
     } else {
@@ -186,11 +194,9 @@ function leftBoundary(index) {
     colCount = columns
     const colPosition = index % colCount;
     const rowPosition = Math.floor(index / colCount);
-    console.log(rowPosition,colPosition)
     if (colPosition==0) {
         return true
     } else {
         return false
     } 
 }
- 
