@@ -1,7 +1,7 @@
 const grids = document.querySelector('.grids')
 const boxSize =  25
 const columns = Math.floor(window.innerWidth / boxSize)
-const rows = 25
+const rows = 15
 
 
 grids.style.setProperty("grid-template-columns", `repeat(${columns}, 1fr)`)
@@ -13,7 +13,8 @@ divAttributes = function(){
     let attributes ={
         'distance': Infinity,
         'isVisited': false,
-        'isBlocked':false
+        'isBlocked':false,
+        'previous':null
     }
     return attributes
 }
@@ -29,6 +30,7 @@ for (var index = 0 ; index < (rows*columns); index++){
     box.setAttribute('distance',distance)
     box.setAttribute('isVisited',false)
     box.setAttribute('isblocked',false)
+    box.setAttribute('previous',null)
     grids.appendChild(box).className = 'box'
 }
 
@@ -113,7 +115,6 @@ checkBoundary = function(checkElement)
 }
 
 getNeighbours = function(currentNode){
-   
     let neighboour = []
     leftNode = currentNode - 1
     rightNode = currentNode + 1
@@ -147,15 +148,22 @@ dijkstra = function(){
     let startNodeDiv = getNodeDiv(startNode)
     distance = 0
     startNodeDiv.setAttribute('distance',distance)
+    // startNodeDiv.setAttribute('previous','none')
     currentNode = startNode
     notVistedNode = notVistedNode.filter(e=>e !== currentNode)
     let queue = []
     neighbourOfCurrentNode = getNeighbours(currentNode)
+    neighbourOfCurrentNode.forEach(
+        function(eachNeighbour) {
+            eachNeighbourDiv = getNodeDiv(eachNeighbour)
+            eachNeighbourDiv.setAttribute('previous',startNode)
+        }
+    )
     neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < 1275)
     j = 1
     endNodeDiv = getNodeDiv(endNode)
     endNodeVisited = endNodeDiv.getAttribute('isVisited')
-    console.log(endNodeVisited)
+    // console.log(endNodeVisited)
     let animate;
     while(j<60)
     {
@@ -171,12 +179,21 @@ dijkstra = function(){
                 getNeighbourDiv.setAttribute('distance',distance)
                 getNeighbourDiv.setAttribute('isVisited',true)
                 newNeighbours = getNeighbours(element)
+                newNeighbours = newNeighbours.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
                 newNeighbours.forEach(function(individualNeighbour){
-                    queue.push(individualNeighbour)
+                    let newNeighbourDiv = getNodeDiv(individualNeighbour)
+                    // if (newNeighbourDiv.getAttribute('previous') === 'null'){
+                    //     newNeighbourDiv.setAttribute('previous',element)
+                    // }
+                    if (newNeighbourDiv.getAttribute('isVisited')==="false"){
+                        newNeighbourDiv.setAttribute('previous',element)
+                        queue.push(individualNeighbour) 
+                    }                   
                 })
                 notVistedNode = notVistedNode.filter(e=>e !== element)
             } 
         });
+
         queue = queue.filter(function(elem, index, self) {
             return index === self.indexOf(elem);
         })
@@ -211,11 +228,39 @@ function leftBoundary(index) {
     } 
 }
 
+
+function getNodesInShortestPathOrder() {
+    const nodesInShortestPathOrder = [];
+    let currentNode = endNode;
+    while (currentNode !== 'null') {
+        nodesInShortestPathOrder.push(parseInt(currentNode));
+        getPreviousDiv = getNodeDiv(currentNode)
+        getPrevious = getPreviousDiv.getAttribute('previous')
+        currentNode = getPrevious
+    }
+    return nodesInShortestPathOrder;
+}
+
+animateShortestPath  = function () {
+    getPath = getNodesInShortestPathOrder()
+    console.log(getPath)
+    getPath.forEach(function(individualPath){
+        console.log(individualPath)
+        getPathDiv = getNodeDiv(individualPath)
+        console.log(getPathDiv)
+        getPathDiv.style.background = 'red'
+    })
+}
 let btn = document.getElementById('visualize')
 let clear = document.getElementById('clear')
 btn.addEventListener('click', function(){
     dijkstra()
+    wrapper = function(){
+        animateShortestPath()
+    }
+    setTimeout(wrapper,5000)
 })
+    
 clear.addEventListener('click', function(){
     location.reload();
 })
