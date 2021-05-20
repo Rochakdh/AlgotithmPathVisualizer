@@ -13,7 +13,7 @@ divAttributes = function(){
     let attributes ={
         'distance': Infinity,
         'isVisited': false,
-        // 'isBlocked':false
+        'isBlocked':false
     }
     return attributes
 }
@@ -28,7 +28,7 @@ for (var index = 0 ; index < (rows*columns); index++){
     // box.innerHTML = index
     box.setAttribute('distance',distance)
     box.setAttribute('isVisited',false)
-    // box.setAttribute('isblocked',isBlocked)
+    box.setAttribute('isblocked',false)
     grids.appendChild(box).className = 'box'
 }
 
@@ -65,12 +65,14 @@ checkDraggedStartEnd = function(eventThrown){
 document.addEventListener('mouseup',function(event){
     if (checkDraggedStartEnd(event)){
         event.target.classList.add('blocked')
+        event.target.setAttribute('isBlocked',true)
     }
 })
 
 
 document.addEventListener("dragover", function(event) {
     if (checkDraggedStartEnd(event)){
+        event.target.setAttribute('isBlocked',true)
         event.target.classList.add('blocked')
     }
 }, false);
@@ -110,21 +112,19 @@ checkBoundary = function(checkElement)
     }
 }
 
-
 getNeighbours = function(currentNode){
-    let leftFlag = 0
-    let rightFlag = 0
+   
     let neighboour = []
     leftNode = currentNode - 1
     rightNode = currentNode + 1
     upNode = currentNode - columns
     downNode = currentNode + columns
     neighboour.push(upNode)
-    if (!rightBoundary(rightNode) && rightFlag === 0){
+    if (!rightBoundary(rightNode)){
         neighboour.push(rightNode)
     }
     neighboour.push(downNode)
-    if (!leftBoundary(leftNode) && leftFlag < 1){
+    if (!leftBoundary(leftNode)){
         neighboour.push(leftNode)
     }
     return neighboour
@@ -153,36 +153,46 @@ dijkstra = function(){
     neighbourOfCurrentNode = getNeighbours(currentNode)
     neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < 1275)
     j = 1
-    while(j<65){
+    endNodeDiv = getNodeDiv(endNode)
+    endNodeVisited = endNodeDiv.getAttribute('isVisited')
+    console.log(endNodeVisited)
+    let animate;
+    while(j<60)
+    {
         animate = setTimeout(function(){
         distance = distance + 1
         neighbourOfCurrentNode.forEach(element => {
-            console.log(element)
+            if (element===endNode){
+                console.log('-----------------------')
+            }
             getNeighbourDiv = getNodeDiv(element)
-            getNeighbourDiv.setAttribute('distance',distance)
-            getNeighbourDiv.setAttribute('isVisited',true)
-            newNeighbours = getNeighbours(element)
-            newNeighbours.forEach(function(individualNeighbour){
-                queue.push(individualNeighbour)
-            })
-            notVistedNode = notVistedNode.filter(e=>e !== element)
+            isWall = getNeighbourDiv.getAttribute('isblocked')
+            if (isWall === 'false'){
+                getNeighbourDiv.setAttribute('distance',distance)
+                getNeighbourDiv.setAttribute('isVisited',true)
+                newNeighbours = getNeighbours(element)
+                newNeighbours.forEach(function(individualNeighbour){
+                    queue.push(individualNeighbour)
+                })
+                notVistedNode = notVistedNode.filter(e=>e !== element)
+            } 
         });
         queue = queue.filter(function(elem, index, self) {
             return index === self.indexOf(elem);
         })
         neighbourOfCurrentNode = queue.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
-        console.log(queue)
         },90*j)
         j++
     }
     clearInterval(animate)
 }
-dijkstra()
+
 
 function rightBoundary(index) {
     colCount = columns
     const colPosition = index % colCount;
     const rowPosition = Math.floor(index / colCount);
+    // console.log(colPosition)
     if (colPosition==(colCount-1)) {
         return true
     } else {
@@ -200,3 +210,12 @@ function leftBoundary(index) {
         return false
     } 
 }
+
+let btn = document.getElementById('visualize')
+let clear = document.getElementById('clear')
+btn.addEventListener('click', function(){
+    dijkstra()
+})
+clear.addEventListener('click', function(){
+    location.reload();
+})

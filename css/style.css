@@ -5,7 +5,7 @@
     background-color: green;
 }
 .end{
-    background-color: rebeccapurple;
+    background-color: rebeccapurple !important;
 }
 .blocked {
     background-color: black;

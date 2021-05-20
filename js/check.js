@@ -5,13 +5,14 @@ dijkstra = function(){
     let previousDistance = 0
     let getNeighbourArray = getNeighbours(startNode)
     flag = 0
+    end = 0
     let visited = []
     while (flag < 25){
         animate = setTimeout(function(){
           previousDistance += 1
           newArray = []
           getNeighbourArray.forEach(element => {
-            console.log(element)
+            // console.log(element)
             let getNeighbourNodeById = document.getElementById('node'+ element)
             getNeighbourNodeById.setAttribute('distance',previousDistance)
             getNeighbourNodeById.setAttribute('isVisited',true)
@@ -59,3 +60,4 @@ function leftBoundary(index) {
     } 
 }
  
+
