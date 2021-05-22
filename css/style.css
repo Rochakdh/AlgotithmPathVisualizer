@@ -1,24 +1,81 @@
 .box{
-    border: 1px solid steelblue;
+    border: 1px solid rgb(72, 155, 223);
 }
 .start{
-    background-color: green !important;
+    background-image: url(../images/play.png);
+    background-size: 100% 100%;
 }
 .end{
-    background-color: rebeccapurple !important;
+    background-image: url(../images/stop.png);
+    background-size: 100% 100%;
 }
 .blocked {
     background-color: black;
+    -webkit-animation-name: wallVisited;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: ease-out;
+    border: black;
 }
 .boundary {
     border: none;
+    background-color: white !important;
 }
+
 
 div[isVisited="true"] {
-    background-color: rgb(47, 169, 218);
+    background-color: aqua;
+    -webkit-animation-name: isVisited;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: ease-out;
 }
 
 
-/* div[isPath="true"] {
-    background-color: red
-} */
+@-webkit-keyframes wallVisited {
+0% {
+    transform: scale(0.3);
+    border-radius: 100%;
+}
+75% {
+    transform: scale(1.2);
+}
+100% {
+    transform: scale(1);
+}
+}
+
+@-webkit-keyframes isVisited {
+    0% {
+        transform: scale(0.3);
+        background-color: rgb(151, 206, 206);
+        border-radius: 100%;
+    }
+    75% {
+        transform: scale(1.2);
+        background-color: teal;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+div[ispath="true"]{
+    /* border:rgb(208, 255, 0) ; */
+    background-color: rgb(208, 255, 0) !important;
+    -webkit-animation-name: isPath;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: ease-out;
+}
+
+@-webkit-keyframes isPath {
+    0% {
+        transform: scale(0.3);
+        background-color: rgb(156, 16, 70);
+        border-radius: 100%;
+    }
+    75% {
+        transform: scale(1.2);
+        background-color: rgb(158, 5, 56);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

@@ -17,5 +17,6 @@ li {
     display: grid;
     gap: 0px;
     column-gap: 0;
+    overflow: hidden;
 }
 

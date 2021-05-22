@@ -24,11 +24,37 @@ drawGrid = function() {
 function randomNumberFromRange(min,max){
     return size = parseInt(Math.random() * (max - min) + min);
 }
+function rightBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    // const rowPosition = Math.floor(index / colCount);
+    if (colPosition==(colCount-1)) {
+        return true
+    } else {
+        return false
+    } 
+}
 
+function leftBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    // const rowPosition = Math.floor(index / colCount);
+    if (colPosition==0) {
+        return true
+    } else {
+        return false
+    } 
+}
 startEndNodes = function (){
-    startNode = randomNumberFromRange(0,rows*columns)
+    startNode = randomNumberFromRange(0,rows*columns) 
     endNode = randomNumberFromRange(0,rows*columns)
     if (startNode === endNode){
+        endNode = randomNumberFromRange(0,rows*columns)
+    }
+    if (rightBoundary(startNode) || leftBoundary(startNode)){
+        startNode = randomNumberFromRange(0,rows*columns)
+    }
+    if (rightBoundary(endNode) || leftBoundary(endNode)){
         endNode = randomNumberFromRange(0,rows*columns)
     }
     document.getElementById(`node${startNode}`).classList.add('start')
@@ -53,6 +79,7 @@ function allDijkastra(){
             boxClass[index].setAttribute('distance',Infinity)
             boxClass[index].setAttribute('isVisited',false)
             boxClass[index].setAttribute('isblocked',false)
+            boxClass[index].setAttribute('isPath',false)
             boxClass[index].setAttribute('previous',null)
         }
     }
@@ -220,13 +247,15 @@ function getNodesInShortestPathOrder() {
 
 animateShortestPath  = function () {
     getPath = getNodesInShortestPathOrder()
-    console.log(getPath)
     getPath.forEach(function(individualPath){
-        console.log(individualPath)
-        getPathDiv = getNodeDiv(individualPath)
-        console.log(getPathDiv)
-        getPathDiv.style.background = 'red'
+        if (individualPath !== startNode && individualPath !== endNode){
+            console.log(individualPath)
+            getPathDiv = getNodeDiv(individualPath)
+            console.log(getPathDiv)
+            getPathDiv.setAttribute('isPath',true)
+        }
     })
+    // clearInterval(animatePath)
 }
 allDijkastra()
 
@@ -241,13 +270,6 @@ document.addEventListener('mouseup',function(event){
     }
 })
 
-// grids.addEventListener("dragover", function(event) {
-//     if (checkDraggedStartEnd(event)){
-//         event.target.setAttribute('isBlocked',true)
-//         event.target.classList.add('blocked')
-//     }
-// });
-
 let dragged;
 document.addEventListener("dragstart", function(event) {
     dragged = event;
@@ -256,10 +278,8 @@ document.addEventListener("dragstart", function(event) {
 
 
 
-  document.addEventListener("dragover", function(event) {
-    // prevent default to allow drop
+grids.addEventListener("dragover", function(event) {
     event.preventDefault();
-    // event.target.style.background = "none";
     if ((dragged.target.id !== 'node' + startNode) && (dragged.target.id !== 'node' + endNode)){
         if (checkDraggedStartEnd(event)){
             event.target.setAttribute('isBlocked',true)
@@ -268,38 +288,27 @@ document.addEventListener("dragstart", function(event) {
     }
   }, false);
 
-  document.addEventListener("drop", function(event) {
-    // prevent default action (open as link for some elements)
-    // event.preventDefault();
-    // move dragged elem to the selected drop target
-    // if (event.target.className == "start") {
-        // console.log(event)
-        // event.target.style.background = 'green';
-        // console.log(dragged.classList)
-        if (dragged.target.id === 'node' + startNode){
-            getIdCurrent= event.target.id
-            getnodeNumber = parseInt(getIdCurrent.substring(4))
-            if (getnodeNumber !== endNode){
-                dragged.target.classList.remove('start')
-                event.target.classList.add('start')
-                startNode = getnodeNumber 
-            }
-            console.log(startNode)
+grids.addEventListener("drop", function(event) {
+    if (dragged.target.id === 'node' + startNode){
+        getIdCurrent= event.target.id
+        getnodeNumber = parseInt(getIdCurrent.substring(4))
+        if (getnodeNumber !== endNode && !leftBoundary(getnodeNumber)
+        && !leftBoundary(getnodeNumber)){
+            dragged.target.classList.remove('start')
+            event.target.classList.add('start')
+            startNode = getnodeNumber 
         }
-        else if (dragged.target.id === 'node' + endNode){
-            getIdCurrent= event.target.id
-            getnodeNumber = parseInt(getIdCurrent.substring(4))
-            if (getnodeNumber !== startNode){
-                dragged.target.classList.remove('end')
-                event.target.classList.add('end')
-                endNode = getnodeNumber 
-            }
+        console.log(startNode)
+    }
+    else if (dragged.target.id === 'node' + endNode){
+        getIdCurrent= event.target.id
+        getnodeNumber = parseInt(getIdCurrent.substring(4))
+        if (getnodeNumber !== startNode  && !leftBoundary(getnodeNumber) && !leftBoundary(getnodeNumber)){
+            dragged.target.classList.remove('end')
+            event.target.classList.add('end')
+            endNode = getnodeNumber 
         }
-       
-
-    //   dragged.parentNode.removeChild( dragged );
-    //   event.target.appendChild( dragged );
-    // }
+        }
   }, false);
 
 btn.addEventListener('click', function(){
