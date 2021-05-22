@@ -10,10 +10,14 @@
 .blocked {
     background-color: black;
 }
+.boundary {
+    border: none;
+}
 
 div[isVisited="true"] {
     background-color: rgb(47, 169, 218);
 }
+
 
 /* div[isPath="true"] {
     background-color: red
