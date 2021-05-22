@@ -11,8 +11,6 @@ let startNode;
 let endNode;
 let box;
 
-
-
 drawGrid = function() {
     for (var index = 0 ; index < (rows*columns); index++){
         box = document.createElement('div')
@@ -172,7 +170,7 @@ function allDijkastra(){
         endNodeDiv = getNodeDiv(endNode)
         endNodeVisited = endNodeDiv.getAttribute('isVisited')
         let animate;
-        while(j<60)
+        while(j<100)
         {
             animate = setTimeout(function(){
             distance = distance + 1
@@ -235,6 +233,7 @@ allDijkastra()
 let btn = document.getElementById('visualize')
 let clear = document.getElementById('clear')
 
+
 document.addEventListener('mouseup',function(event){
     if (checkDraggedStartEnd(event)){
         event.target.classList.add('blocked')
@@ -242,12 +241,66 @@ document.addEventListener('mouseup',function(event){
     }
 })
 
-document.addEventListener("dragover", function(event) {
-    if (checkDraggedStartEnd(event)){
-        event.target.setAttribute('isBlocked',true)
-        event.target.classList.add('blocked')
-    }
+// grids.addEventListener("dragover", function(event) {
+//     if (checkDraggedStartEnd(event)){
+//         event.target.setAttribute('isBlocked',true)
+//         event.target.classList.add('blocked')
+//     }
+// });
+
+let dragged;
+document.addEventListener("dragstart", function(event) {
+    dragged = event;
+    console.log(dragged)
 }, false);
+
+
+
+  document.addEventListener("dragover", function(event) {
+    // prevent default to allow drop
+    event.preventDefault();
+    // event.target.style.background = "none";
+    if ((dragged.target.id !== 'node' + startNode) && (dragged.target.id !== 'node' + endNode)){
+        if (checkDraggedStartEnd(event)){
+            event.target.setAttribute('isBlocked',true)
+            event.target.classList.add('blocked')
+        }
+    }
+  }, false);
+
+  document.addEventListener("drop", function(event) {
+    // prevent default action (open as link for some elements)
+    // event.preventDefault();
+    // move dragged elem to the selected drop target
+    // if (event.target.className == "start") {
+        // console.log(event)
+        // event.target.style.background = 'green';
+        // console.log(dragged.classList)
+        if (dragged.target.id === 'node' + startNode){
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== endNode){
+                dragged.target.classList.remove('start')
+                event.target.classList.add('start')
+                startNode = getnodeNumber 
+            }
+            console.log(startNode)
+        }
+        else if (dragged.target.id === 'node' + endNode){
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== startNode){
+                dragged.target.classList.remove('end')
+                event.target.classList.add('end')
+                endNode = getnodeNumber 
+            }
+        }
+       
+
+    //   dragged.parentNode.removeChild( dragged );
+    //   event.target.appendChild( dragged );
+    // }
+  }, false);
 
 btn.addEventListener('click', function(){
     dijkstra()
