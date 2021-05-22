@@ -2,7 +2,7 @@
     border: 1px solid steelblue;
 }
 .start{
-    background-color: green;
+    background-color: green !important;
 }
 .end{
     background-color: rebeccapurple !important;
@@ -14,3 +14,7 @@
 div[isVisited="true"] {
     background-color: rgb(47, 169, 218);
 }
+
+/* div[isPath="true"] {
+    background-color: red
+} */

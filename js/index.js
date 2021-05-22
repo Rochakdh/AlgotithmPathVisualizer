@@ -282,9 +282,10 @@ function allAstar(){
         box.id = 'node' + index
         box.style.width =  boxSize + 'px'
         box.style.height = boxSize + 'px'
-        // box.innerHTML = index
+        box.innerHTML = index
         box.setAttribute('distanceGn',Infinity)
         box.setAttribute('distanceHn',Infinity)
+        box.setAttribute('isPath',false)
         // box.setAttribute('isVisitedGn',false)
         // box.setAttribute('isVisitedHn',false)
         box.setAttribute('isVisited',false)
@@ -525,65 +526,70 @@ function allAstar(){
     }
 
     function getNodesInShortestPathOrder() {
-        const nodesInShortestPathOrder = [];
+        let nodesInShortestPathOrder = [];
+        let visitedPath = []
         let currentNode = startNode;
-        while (parseInt(currentNode) !== endNode) {
-            console.log(currentNode,endNode)
-            getAllNeighboursElements = getNeighbours(currentNode)
-            getAllNeighboursElements = getAllNeighboursElements.filter(e=> e>0 && e<totalCell )
-            getNeighbourTotalCost = []
-            getAllNeighboursElements.forEach(function(eachNeighbour){
-                eachNeighbourDiv = getNodeDiv(eachNeighbour)
-                checkWall = eachNeighbourDiv.getAttribute('isblocked')
-                if(checkWall==="false"){
-                    getNeighbourTotalCost.push(getTotalCost(eachNeighbour))
-                }
-            })
-            // console.log(getNeighbourTotalCost)
-            // getNeighbourTotalCost.filter(e => typeof e !== "number")
-            fixedNode = Math.min(...getNeighbourTotalCost)
-            console.log('min-node',fixedNode)
-            // getAllNeighboursElements.filter(e => getTotalCost(e) === fixedNode)
-            let nextNode;
-            if (hasDuplicates(getNeighbourTotalCost)){
-                let hnArray = []
-                getDuplicateNode = getAllNeighboursElements.filter(e => getTotalCost(e) === fixedNode)
-                getDuplicateNode.forEach(function(elem){
-                    elementDiv = getNodeDiv(elem)
-                    hN = elementDiv.getAttribute('distanceHn')
-                    hnArray.push(parseInt(hN))
+        // parseInt(currentNode) !== endNode
+        j = 1
+        while (j<90) {
+            if (parseInt(currentNode) === endNode)
+            {
+                j = 0
+                break;  
+            } 
+            animate =  setInterval(function(){
+                pathDiv = getNodeDiv(currentNode)
+                pathDiv.setAttribute('isPath',true)
+                getAllNeighboursElements = getNeighbours(currentNode)
+                console.log(getAllNeighboursElements)
+                getAllNeighboursElements = getAllNeighboursElements.filter(e=> e > 0 && e < totalCell & e!== endNode)
+                getAllNeighboursElements = getAllNeighboursElements.filter(e=> getNodeDiv(e).getAttribute('isblocked') === 'false')
+                getAllNeighboursElements.forEach(function(individualNeighbour){
+                    getIndividualNeighbourDiv = getNodeDiv(individualNeighbour)
+                    getIndividualNeighbourDiv.setAttribute('isVisited',true)
                 })
-                minHn = Math.min(...hnArray)
-                getDuplicateNode.forEach(function(elem){
-                    elementDiv = getNodeDiv(elem)
-                    hN = elementDiv.getAttribute('distanceHn')
-                    if (parseInt(hN) === minHn){
-                        nextNode = elem
+                console.log(getAllNeighboursElements)
+                fixedNode = getAllNeighboursElements.reduce(function(e1,e2){
+                    e1Div = getTotalCost(e1)
+                    e2Div = getTotalCost(e2)
+                    if (e1Div !== e2Div){
+                        return ( e1Div < e2Div ? e1 : e2)
                     }
-                })
-            }
-            else{
-                nextNode = getAllNeighboursElements[0]
-            }
-            // console.log('unique-fixed-node-after-filter',nextNode)
-            nodesInShortestPathOrder.push(nextNode);
-            // console.log('sorted-Node-Path',nodesInShortestPathOrder)
-            currentNode = nextNode
+                    else{
+                        e1HnDiv = getNodeDiv(e1)
+                        hN1 = parseInt(e1HnDiv.getAttribute('distanceHn'))
+                        e2HnDiv = getNodeDiv(e2)
+                        hN2 = parseInt(e2HnDiv.getAttribute('distanceHn'))
+                        return ( hN1 <= hN2 ? e1 : e2)
+                    }
+                }) 
+                indexFixedNode = getAllNeighboursElements.indexOf(fixedNode)
+                nextNode = getAllNeighboursElements[indexFixedNode]
+                nodesInShortestPathOrder.push(nextNode)
+                currentNode = nextNode          
+            },100*j)
+            j++  
         }
-        return nodesInShortestPathOrder;
+        return nodesInShortestPathOrder
     }
         
         
     animateShortestPath  = function () {
         getPath = getNodesInShortestPathOrder()
-        console.log(getPath)
-        getPath.forEach(function(individualPath){
-            console.log(individualPath)
-            getPathDiv = getNodeDiv(individualPath)
-            console.log(getPathDiv)
-            getPathDiv.style.background = 'red'
-        })
+        getPath.pop()
+        wrapper = function(){
+            getPath.forEach(function(individualPath){
+                getPathDiv = getNodeDiv(individualPath)
+                console.log(getPathDiv)
+                getPathDiv.style.background = 'red'
+            })
+        }
+        setTimeout(wrapper,2000)  
     }
+
+    
+
+
 
     document.addEventListener('mouseup',function(event){
         if (checkDraggedStartEnd(event)){
@@ -608,9 +614,7 @@ let astar = document.getElementById('a-star')
 astar.addEventListener('click', function(){
     aStarGn()
     aStarHn()
+    // animateTravelled()
     animateShortestPath()
-    // wrapper = function(){
-    //     animateShortestPath()
-    // }
-    // setTimeout(wrapper,5000)
+    // animateShortestPath()
 })
