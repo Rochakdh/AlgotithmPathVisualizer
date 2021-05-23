@@ -201,7 +201,7 @@ function allDijkastra(){
         {
             animate = setTimeout(function(){
             distance = distance + 1
-            neighbourOfCurrentNode.some(element => {
+            neighbourOfCurrentNode.forEach(element => {
                 if (element===endNode){
                     console.log('-----------------------')
                 }
@@ -272,6 +272,7 @@ document.addEventListener('mouseup',function(event){
 
 let dragged;
 document.addEventListener("dragstart", function(event) {
+    event.dataTransfer.effectAllowed = "copy";
     dragged = event;
     console.log(dragged)
 }, false);
@@ -308,15 +309,25 @@ grids.addEventListener("drop", function(event) {
             event.target.classList.add('end')
             endNode = getnodeNumber 
         }
-        }
+    }
+    event.dataTransfer.dropEffect = "copy";
   }, false);
 
 btn.addEventListener('click', function(){
-    dijkstra()
-    wrapper = function(){
-        animateShortestPath()
+
+    switch (selectedAlgorithm) {
+        case 'dijkstra':
+            dijkstra()
+            wrapper = function(){
+                animateShortestPath()
+            }
+            setTimeout(wrapper,6000)
+            break;
+        case 'astar':
+            break;
+        case 'breadthfirst':
+            break;
     }
-    setTimeout(wrapper,5000)
 })
 
 clear.addEventListener('click', function(){
