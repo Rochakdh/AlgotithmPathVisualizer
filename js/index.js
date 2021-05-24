@@ -557,8 +557,8 @@ function allAstar(){
         {
             allDijkastra();  
         } 
-        while (j<80) {
-            if (parseInt(currentNode) === endNode)
+        while (true) {
+            if (parseInt(currentNode) === endNode || getNodeDiv(currentNode).getAttribute('distanceHn' ) === 'Infinity')
             {
                 break;  
             } 
