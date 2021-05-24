@@ -553,6 +553,10 @@ function allAstar(){
         let currentNode = startNode;
         // parseInt(currentNode) !== endNode
         j = 1
+        if (getNodeDiv(currentNode).getAttribute('distanceHn' ) === 'Infinity')
+        {
+            allDijkastra();  
+        } 
         while (j<80) {
             if (parseInt(currentNode) === endNode)
             {
