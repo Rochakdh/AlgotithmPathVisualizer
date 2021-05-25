@@ -15,7 +15,7 @@ drawGrid = function() {
     for (var index = 0 ; index < totalCell; index++){
         box = document.createElement('div')
         box.id = 'node' + index
-        box.innerHTML = index
+        // box.innerHTML = index
         box.style.width =  boxSize + 'px'
         box.style.height = boxSize + 'px'
         grids.appendChild(box).className = 'box'
@@ -157,6 +157,7 @@ function allDijkastra(){
     let rightNode;
     let upNode;
     let downNode;
+    let timeOut;
     
     getBoundary = function(){
       let boundaryNode = []
@@ -205,7 +206,7 @@ function allDijkastra(){
         endNodeDiv = getNodeDiv(endNode)
         endNodeVisited = endNodeDiv.getAttribute('isVisited')
         let animate;
-        toggle = 1
+        timeOut = 1
         while(j<totalCell)
         {
             animate = setTimeout(function(){
@@ -213,7 +214,6 @@ function allDijkastra(){
             neighbourOfCurrentNode.some(element => {
                 if (element===endNode){
                     j = totalCell + 1
-                    // toggle = 0
                     return true
                 }
                 getNeighbourDiv = getNodeDiv(element)
@@ -239,6 +239,7 @@ function allDijkastra(){
             neighbourOfCurrentNode = queue.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
             },90*j)
             j++
+            timeOut ++;
         }
         clearInterval(animate)
     }
@@ -272,13 +273,14 @@ function allDijkastra(){
     wrapper = function(){
         animateShortestPath()
     }
-    setTimeout(wrapper,9000)
+    setTimeout(wrapper,10*timeOut)
 }
 
 
 
 let btn = document.getElementById('visualize')
 let clear = document.getElementById('clear')
+let maze = document.getElementById('maze')
 
 
 document.addEventListener('mouseup',function(event){
@@ -344,6 +346,10 @@ btn.addEventListener('click', function(){
         case 'breadthfirst':
             break;
     }
+})
+
+maze.addEventListener('click', function(){
+    generateRandomMaze();
 })
 
 clear.addEventListener('click', function(){

@@ -62,21 +62,21 @@ div[isVisited="true"] {
 }
 div[ispath="true"]{
     /* border:rgb(208, 255, 0) ; */
-    background-color: rgb(208, 255, 0) !important;
+    background-color: rgb(208, 255, 0);
     -webkit-animation-name: isPath;
-    -webkit-animation-duration: 2s;
+    -webkit-animation-duration: 1s;
     -webkit-animation-timing-function: ease-out;
 }
 
 @-webkit-keyframes isPath {
     0% {
         transform: scale(0.3);
-        background-color: rgb(156, 16, 70);
+        background-color: rgb(205, 226, 10);
         border-radius: 100%;
     }
     75% {
         transform: scale(1.2);
-        background-color: rgb(158, 5, 56);
+        background-color: rgb(245, 241, 24);
     }
     100% {
         transform: scale(1);
