@@ -39,9 +39,8 @@ function generateRandomMaze(){
         setLinkedList = []
         getNodeDiv(firstNode).setAttribute('isMazeVisted',true)
         eachElementNeighbour = getNeighbours(firstNode)
-        j = 1 
-        let i = 0
-        while(j<totalCell){
+        startCell = 1 
+        while(startCell<totalCell){
             eachElementNeighbour = eachElementNeighbour.filter (e => e > 0 && e < totalCell)
             if (!areAllNodeVisited(eachElementNeighbour)){
                 eachElementNeighbour = eachElementNeighbour.filter (e => getNodeDiv(e).getAttribute('isMazeVisted') ==='false')
@@ -51,7 +50,6 @@ function generateRandomMaze(){
                 shuffledDiv.setAttribute('isMazeVisted',true)
                 shuffledDiv.setAttribute('isBlocked',false)
                 shuffledDiv.classList.remove('blocked') 
-                
                 shuffledDiv.setAttribute('previousLink',vistedTracker[vistedTracker.length-1])
                 vistedTracker.push(selectOneNeighbours)
             }
@@ -63,7 +61,7 @@ function generateRandomMaze(){
                 poppedDiv.classList.add('blocked')
             }
             eachElementNeighbour = getNeighbours(vistedTracker[vistedTracker.length-1])
-            j++
+            startCell++
         }
     }
     setAllMazeVisitedToFalse()

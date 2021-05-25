@@ -71,27 +71,27 @@ checkDraggedStartEnd = function(eventThrown){
         }
     return false
 }
-function rightBoundary(index) {
-    colCount = columns
-    const colPosition = index % colCount;
-    // const rowPosition = Math.floor(index / colCount);
-    if (colPosition==(colCount-1)) {
-        return true
-    } else {
-        return false
-    } 
-}
+// function rightBoundary(index) {
+//     colCount = columns
+//     const colPosition = index % colCount;
+//     // const rowPosition = Math.floor(index / colCount);
+//     if (colPosition==(colCount-1)) {
+//         return true
+//     } else {
+//         return false
+//     } 
+// }
 
-function leftBoundary(index) {
-    colCount = columns
-    const colPosition = index % colCount;
-    // const rowPosition = Math.floor(index / colCount);
-    if (colPosition==0) {
-        return true
-    } else {
-        return false
-    } 
-}
+// function leftBoundary(index) {
+//     colCount = columns
+//     const colPosition = index % colCount;
+//     // const rowPosition = Math.floor(index / colCount);
+//     if (colPosition==0) {
+//         return true
+//     } else {
+//         return false
+//     } 
+// }
 
 
 getNeighbours = function(currentNode){
@@ -124,6 +124,21 @@ function sealBoundary(index) {
             getBoundaryDiv.classList.add('boundary')
         }
     }   
+}
+
+function clearBoard(){
+    let boxClass = document.getElementsByClassName('box')
+    for (var index = 0 ; index < (rows*columns); index++){
+        boxClass[index].removeAttribute('distance')
+        boxClass[index].removeAttribute('isVisited')
+        boxClass[index].removeAttribute('isPath')
+        boxClass[index].removeAttribute('previous')
+        boxClass[index].removeAttribute('isBlocked')
+        boxClass[index].removeAttribute('distanceGn')
+        boxClass[index].removeAttribute('distanceHn')
+        boxClass[index].removeAttribute('isMazeVisted')
+        boxClass[index].removeAttribute('previousLink')
+    }
 }
 
 
@@ -285,10 +300,17 @@ let maze = document.getElementById('maze')
 
 document.addEventListener('mouseup',function(event){
     if (checkDraggedStartEnd(event)){
-        event.target.classList.add('blocked')
-        event.target.setAttribute('isBlocked',true)
+        if ( event.target.getAttribute('isBlocked')==='false'){
+            event.target.classList.add('blocked')
+            event.target.setAttribute('isBlocked',true)
+        }
+        else{
+            event.target.classList.remove('blocked')
+            event.target.setAttribute('isBlocked',false)
+        }
     }
 })
+
 
 let dragged;
 document.addEventListener("dragstart", function(event) {
@@ -353,7 +375,8 @@ maze.addEventListener('click', function(){
 })
 
 clear.addEventListener('click', function(){
-    location.reload();
+    clearBoard();
+    // location.reload();
 })
 
 
