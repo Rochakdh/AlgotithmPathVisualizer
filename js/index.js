@@ -15,6 +15,7 @@ drawGrid = function() {
     for (var index = 0 ; index < totalCell; index++){
         box = document.createElement('div')
         box.id = 'node' + index
+        box.innerHTML = index
         box.style.width =  boxSize + 'px'
         box.style.height = boxSize + 'px'
         grids.appendChild(box).className = 'box'
@@ -70,10 +71,65 @@ checkDraggedStartEnd = function(eventThrown){
         }
     return false
 }
+function rightBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    // const rowPosition = Math.floor(index / colCount);
+    if (colPosition==(colCount-1)) {
+        return true
+    } else {
+        return false
+    } 
+}
+
+function leftBoundary(index) {
+    colCount = columns
+    const colPosition = index % colCount;
+    // const rowPosition = Math.floor(index / colCount);
+    if (colPosition==0) {
+        return true
+    } else {
+        return false
+    } 
+}
+
+
+getNeighbours = function(currentNode){
+    let neighboour = []
+    leftNode = currentNode - 1
+    rightNode = currentNode + 1
+    upNode = currentNode - columns
+    downNode = currentNode + columns
+    neighboour.push(upNode)
+    if (!rightBoundary(rightNode)){
+        neighboour.push(rightNode)
+    }
+    neighboour.push(downNode)
+    if (!leftBoundary(leftNode)){
+        neighboour.push(leftNode)
+    }
+    return neighboour
+}
+
+getNodeDiv = function(node){
+    return document.getElementById('node'+ node)
+}
+
+
+function sealBoundary(index) {
+    for (var index = 0 ; index < totalCell; index++){
+        if (rightBoundary(index) || leftBoundary(index)){
+            getBoundaryDiv = getNodeDiv(index)
+            getBoundaryDiv.setAttribute('isBlocked',true)
+            getBoundaryDiv.classList.add('boundary')
+        }
+    }   
+}
 
 
 drawGrid();
 startEndNodes();
+sealBoundary();
 
 function allDijkastra(){
     
@@ -127,62 +183,7 @@ function allDijkastra(){
             return false
         }
     }
-
-    function rightBoundary(index) {
-        colCount = columns
-        const colPosition = index % colCount;
-        // const rowPosition = Math.floor(index / colCount);
-        if (colPosition==(colCount-1)) {
-            return true
-        } else {
-            return false
-        } 
-    }
     
-    function leftBoundary(index) {
-        colCount = columns
-        const colPosition = index % colCount;
-        // const rowPosition = Math.floor(index / colCount);
-        if (colPosition==0) {
-            return true
-        } else {
-            return false
-        } 
-    }
-
-   
-    
-    getNeighbours = function(currentNode){
-        let neighboour = []
-        leftNode = currentNode - 1
-        rightNode = currentNode + 1
-        upNode = currentNode - columns
-        downNode = currentNode + columns
-        neighboour.push(upNode)
-        if (!rightBoundary(rightNode)){
-            neighboour.push(rightNode)
-        }
-        neighboour.push(downNode)
-        if (!leftBoundary(leftNode)){
-            neighboour.push(leftNode)
-        }
-        return neighboour
-    }
-    
-    getNodeDiv = function(node){
-        return document.getElementById('node'+ node)
-    }
-
-    function sealBoundary(index) {
-        for (var index = 0 ; index < totalCell; index++){
-            if (rightBoundary(index) || leftBoundary(index)){
-                getBoundaryDiv = getNodeDiv(index)
-                getBoundaryDiv.setAttribute('isBlocked',true)
-                getBoundaryDiv.classList.add('boundary')
-            }
-        }   
-    }
-    sealBoundary();
 
     nonVisited = function(){
         let noneVisited = []
@@ -204,13 +205,16 @@ function allDijkastra(){
         endNodeDiv = getNodeDiv(endNode)
         endNodeVisited = endNodeDiv.getAttribute('isVisited')
         let animate;
-        while(j<100)
+        toggle = 1
+        while(j<totalCell)
         {
             animate = setTimeout(function(){
             distance = distance + 1
-            neighbourOfCurrentNode.forEach(element => {
+            neighbourOfCurrentNode.some(element => {
                 if (element===endNode){
-                    console.log('-----------------------')
+                    j = totalCell + 1
+                    // toggle = 0
+                    return true
                 }
                 getNeighbourDiv = getNodeDiv(element)
                 isWall = getNeighbourDiv.getAttribute('isblocked')
@@ -268,7 +272,7 @@ function allDijkastra(){
     wrapper = function(){
         animateShortestPath()
     }
-    setTimeout(wrapper,6000)
+    setTimeout(wrapper,9000)
 }
 
 
@@ -552,13 +556,9 @@ function allAstar(){
         let visitedPath = []
         let currentNode = startNode;
         // parseInt(currentNode) !== endNode
-        j = 1
-        if (getNodeDiv(currentNode).getAttribute('distanceHn' ) === 'Infinity')
-        {
-            allDijkastra();  
-        } 
+        j = 1 
         while (true) {
-            if (parseInt(currentNode) === endNode || getNodeDiv(currentNode).getAttribute('distanceHn' ) === 'Infinity')
+            if (parseInt(currentNode) === endNode)
             {
                 break;  
             } 

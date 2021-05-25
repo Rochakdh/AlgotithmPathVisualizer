@@ -21,7 +21,10 @@
     background-color: white !important;
 }
 
-
+/* div [isMazeVisted ='true']
+{
+    background-color: orchid;
+} */
 div[isVisited="true"] {
     background-color: aqua;
     -webkit-animation-name: isVisited;
