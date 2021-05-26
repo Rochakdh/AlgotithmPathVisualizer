@@ -141,7 +141,6 @@ function clearBoard(){
     }
 }
 
-
 drawGrid();
 startEndNodes();
 sealBoundary();
@@ -366,6 +365,10 @@ btn.addEventListener('click', function(){
             allAstar();
             break;
         case 'breadthfirst':
+            // allDeapthFirstSearch()
+            break;
+        case 'depthfirst':
+            allDeapthFirstSearch()
             break;
     }
 })
@@ -375,8 +378,8 @@ maze.addEventListener('click', function(){
 })
 
 clear.addEventListener('click', function(){
-    clearBoard();
-    // location.reload();
+    // clearBoard();
+    location.reload();
 })
 
 
