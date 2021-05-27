@@ -1,22 +1,26 @@
 button,#select-option,.slider{
     background-color: #FBDE44FF;
 }
+
 .menu{
     background-color:  #28334AFF ;
-    color: #FBDE44FF;
+    color: white;
 }
 
 .box{
     border: 1px solid rgb(72, 155, 223);
 }
+
 .start{
     background-image: url(../images/play.png);
     background-size: 100% 100%;
 }
+
 .end{
     background-image: url(../images/stop.png);
     background-size: 100% 100%;
 }
+
 .blocked {
     background-color: black !important;
     -webkit-animation-name: wallVisited;
@@ -24,15 +28,12 @@ button,#select-option,.slider{
     -webkit-animation-timing-function: ease-out;
     /* border: black; */
 }
+
 .boundary {
     border: none;
     background-color: white !important;
 }
 
-/* div [isMazeVisted ='true']
-{
-    background-color: orchid;
-} */
 div[isVisited="true"] {
     background-color: aqua;
     -webkit-animation-name: isVisited;
