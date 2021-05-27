@@ -17,41 +17,110 @@ function allAstar(){
         }
     }
       
-    aStarCostFunction = function(costOf,node){
-        console.log(costOf,node)
+    aStarGnCost = function(){
         let notVistedNode = nonVisited()
-        let startNodeDiv = getNodeDiv(node)
+        let startNodeDiv = getNodeDiv(startNode)
         distanceGn = 0
-        startNodeDiv.setAttribute(costOf,distanceGn)
-        notVistedNode = notVistedNode.filter(e =>e !== node)
+        startNodeDiv.setAttribute('distanceGn',distanceGn)
+        notVistedNode = notVistedNode.filter(e=>e !== startNode)
         let queue = []
-        neighbourOfCurrentNode = getNeighbours(node)
-        neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e=> e > 0 && e<totalCell)
+        neighbourOfCurrentNode = getNeighbours(startNode)
+        neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e=>e>0 && e<totalCell)
+        neighbourOfCurrentNode.forEach(
+            function(eachNeighbour) {
+                eachNeighbourDiv = getNodeDiv(eachNeighbour)
+                // eachNeighbourDiv.setAttribute('previous',startNode)
+            }
+        )
+        neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < totalCell)
         j = 1
+        // endNodeDiv = getNodeDiv(endNode)
+        // endNodeVisited = endNodeDiv.getAttribute('isVisited')
+        // console.log(endNodeVisited)
+        let animate;
         while(j<totalCell/4)
         {
+            // animate = setTimeout(function(){
             distanceGn = distanceGn + 1
             neighbourOfCurrentNode.forEach(element => {
                 getNeighbourDiv = getNodeDiv(element)
                 isWall = getNeighbourDiv.getAttribute('isblocked')
                 if (isWall === 'false'){
-                    getNeighbourDiv.setAttribute(costOf,distanceGn)
+                    getNeighbourDiv.setAttribute('distanceGn',distanceGn)
+                    // getNeighbourDiv.setAttribute('isVisitedGn',true)
                     newNeighbours = getNeighbours(element)
                     newNeighbours = newNeighbours.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
-                    notVistedNode = notVistedNode.filter(e=>e !== element)
                     newNeighbours.forEach(function(individualNeighbour){
-                        queue.push(individualNeighbour)               
+                        // let newNeighbourDiv = getNodeDiv(individualNeighbour)
+                        // if (newNeighbourDiv.getAttribute('isVisitedGn')==="false"){
+                        //     newNeighbourDiv.setAttribute('previous',element)
+                            queue.push(individualNeighbour) 
+                        // }                   
                     })
+                    notVistedNode = notVistedNode.filter(e=>e !== element)
                 } 
             });
+    
             queue = queue.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
             neighbourOfCurrentNode = queue.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
+            // },90*j)
             j++
         }
+        // clearInterval(animate)
     }
 
+    aStarHnCost = function(){
+        let notVistedNode = nonVisited()
+        let endNodeDiv = getNodeDiv(endNode)
+        distanceHn = 0
+        endNodeDiv.setAttribute('distanceHn',distanceHn)
+        notVistedNode = notVistedNode.filter(e => e !== endNode)
+        let queue = []
+        neighbourOfCurrentNode = getNeighbours(endNode)
+        neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e=>e>0 && e<totalCell)
+        neighbourOfCurrentNode.forEach(
+            function(eachNeighbour) {
+                eachNeighbourDiv = getNodeDiv(eachNeighbour)
+                // eachNeighbourDiv.setAttribute('previous',endNode)
+            }
+        )
+        neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < totalCell)
+        j = 1
+        let animate;
+        while(j<totalCell/4)
+        {
+            // animate = setTimeout(function(){
+            distanceHn = distanceHn + 1
+            neighbourOfCurrentNode.forEach(element => {
+                getNeighbourDiv = getNodeDiv(element)
+                isWall = getNeighbourDiv.getAttribute('isblocked')
+                if (isWall === 'false'){
+                    getNeighbourDiv.setAttribute('distanceHn',distanceHn)
+                    newNeighbours = getNeighbours(element)
+                    newNeighbours = newNeighbours.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
+                    newNeighbours.forEach(function(individualNeighbour){
+                        // let newNeighbourDiv = getNodeDiv(individualNeighbour)
+                        // if (newNeighbourDiv.getAttribute('isVisitedHn')==="false"){
+                            // newNeighbourDiv.setAttribute('previous',element)
+                            queue.push(individualNeighbour) 
+                        // }                   
+                    })
+                    notVistedNode = notVistedNode.filter(e=>e !== element)
+                } 
+            });
+    
+            queue = queue.filter(function(elem, index, self) {
+                return index === self.indexOf(elem);
+            })
+            neighbourOfCurrentNode = queue.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
+            // },90*j)
+            j++
+        }
+        // clearInterval(animate)
+    }
+    
     
     function getTotalCost(element){
         elementDiv = getNodeDiv(element)
@@ -121,7 +190,7 @@ function allAstar(){
     }
 
     setProperty();
-    aStarCostFunction('distanceGn',startNode)
-    aStarCostFunction('distanceHn',endNode)
+    aStarGnCost();
+    aStarHnCost();
     animateShortestPathAStar();
 }
