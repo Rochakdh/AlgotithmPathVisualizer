@@ -1,10 +1,8 @@
 const grids = document.querySelector('.grids')
 let boxSize =  25
-const columns = Math.floor(window.innerWidth / boxSize)
 let rows = 15
+const columns = Math.floor(window.innerWidth / boxSize)
 
-grids.style.setProperty("grid-template-columns", `repeat(${columns}, 1fr)`)
-grids.style.setProperty("grid-template-rows", `repeat(${rows}, 1fr)`)
 
 let totalCell = rows*columns
 let startNode;
@@ -15,11 +13,14 @@ let previousBlockedArray;
 let previousStartEnd;
 let startNodeDragging = false;
 
-drawGrid = function() {
+grids.style.setProperty("grid-template-columns", `repeat(${columns}, 1fr)`)
+grids.style.setProperty("grid-template-rows", `repeat(${rows}, 1fr)`)
+
+function drawGrid() {
     for (var index = 0 ; index < totalCell; index++){
         box = document.createElement('div')
         box.id = 'node' + index
-        box.innerHTML = index
+        // box.innerHTML = index
         box.style.width =  boxSize + 'px'
         box.style.height = boxSize + 'px'
         grids.appendChild(box).className = 'box'
@@ -27,45 +28,42 @@ drawGrid = function() {
 }
 
 function randomNumberFromRange(min,max){
+
     return size = parseInt(Math.random() * (max - min) + min);
 }
 
 function rightBoundary(index) {
+
     colCount = columns
     const colPosition = index % colCount;
-    // const rowPosition = Math.floor(index / colCount);
-    if (colPosition==(colCount-1)) {
-        return true
-    } else {
-        return false
-    } 
+    
+    return colPosition===(colCount-1)
 }
 
 function leftBoundary(index) {
+
     colCount = columns
     const colPosition = index % colCount;
-    // const rowPosition = Math.floor(index / colCount);
-    if (colPosition==0) {
-        return true
-    } else {
-        return false
-    } 
+
+    return colPosition === 0
 }
-startEndNodes = function (){
-    startNode = randomNumberFromRange(0,rows*columns) 
-    endNode = randomNumberFromRange(0,rows*columns)
+
+function startEndNodes(){
+    startNode = randomNumberFromRange(0,totalCell) 
+    endNode = randomNumberFromRange(0,totalCell)
     if (startNode === endNode){
-        endNode = randomNumberFromRange(0,rows*columns)
+        endNode = randomNumberFromRange(0,totalCell)
     }
     if (rightBoundary(startNode) || leftBoundary(startNode)){
-        startNode = randomNumberFromRange(0,rows*columns)
+        startNode = randomNumberFromRange(0,totalCell)
     }
     if (rightBoundary(endNode) || leftBoundary(endNode)){
-        endNode = randomNumberFromRange(0,rows*columns)
+        endNode = randomNumberFromRange(0,totalCell)
     }
     document.getElementById(`node${startNode}`).classList.add('start')
     document.getElementById(`node${endNode}`).classList.add('end')
 }
+
 checkDraggedStartEnd = function(eventThrown){
     if (
         eventThrown.target.id != `node${startNode}` &&  eventThrown.target.id != `node${endNode}` 
@@ -121,20 +119,6 @@ function sealBoundary(index) {
     }   
 }
 
-function previousStateBlocks(){
-    for (var index = 0 ; index < totalCell; index++){
-        if (!rightBoundary(index) || !leftBoundary(index)){
-            blocked = getNodeDiv(index)
-            if (blocked.getAttribute('isBlocked') === 'true'){
-
-            }
-        }
-    }  
-
-
-
-
-}
 
 function clearBoard(){
     let boxClass = document.getElementsByClassName('box')
@@ -153,6 +137,7 @@ function clearBoard(){
     }
     console.log(boxClass)
 }
+
 drawGrid();
 startEndNodes();
 sealBoundary();
