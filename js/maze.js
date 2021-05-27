@@ -31,6 +31,12 @@ function generateRandomMaze(){
             }
         }   
     }
+
+    function removeBlock(node){
+        getBoundaryDiv = getNodeDiv(node)
+        getBoundaryDiv.setAttribute('isBlocked',false)
+        getBoundaryDiv.classList.remove('blocked')   
+    }
     
     function Maze() {
         let firstNode = 1
@@ -68,6 +74,6 @@ function generateRandomMaze(){
     }
     setAllMazeVisitedToFalse()
     Maze()
+    removeBlock(startNode);
+    removeBlock(endNode);
 }
-
-// generateRandomMaze();

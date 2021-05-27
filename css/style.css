@@ -1,3 +1,11 @@
+button,#select-option,.slider{
+    background-color: #FBDE44FF;
+}
+.menu{
+    background-color:  #28334AFF ;
+    color: #FBDE44FF;
+}
+
 .box{
     border: 1px solid rgb(72, 155, 223);
 }

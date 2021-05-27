@@ -1,7 +1,7 @@
 const grids = document.querySelector('.grids')
-const boxSize =  25
+let boxSize =  25
 const columns = Math.floor(window.innerWidth / boxSize)
-const rows = 15
+let rows = 15
 
 grids.style.setProperty("grid-template-columns", `repeat(${columns}, 1fr)`)
 grids.style.setProperty("grid-template-rows", `repeat(${rows}, 1fr)`)
@@ -19,7 +19,7 @@ drawGrid = function() {
     for (var index = 0 ; index < totalCell; index++){
         box = document.createElement('div')
         box.id = 'node' + index
-        // box.innerHTML = index
+        box.innerHTML = index
         box.style.width =  boxSize + 'px'
         box.style.height = boxSize + 'px'
         grids.appendChild(box).className = 'box'
@@ -143,6 +143,7 @@ function clearBoard(){
         boxClass[index].removeAttribute('isVisited')
         boxClass[index].removeAttribute('isPath')
         boxClass[index].removeAttribute('previous')
+        boxClass[index].removeAttribute('previousVisited')
         // boxClass[index].removeAttribute('isBlocked')
         boxClass[index].removeAttribute('distanceGn')
         boxClass[index].removeAttribute('distanceHn')
@@ -157,7 +158,6 @@ startEndNodes();
 sealBoundary();
 
 function allDijkastra(){
-    console.log('I am in')
     setDijkastraProperty = function(){
         let boxClass = document.getElementsByClassName('box')
         // console.log(boxClass)
@@ -183,6 +183,7 @@ function allDijkastra(){
     // let upNode;
     // let downNode;
     // let timeOut;
+    let vistedLength;
     
     getBoundary = function(){
       let boundaryNode = []
@@ -241,7 +242,7 @@ function allDijkastra(){
             distance = distance + 1
             console.log(distance)
             neighbourOfCurrentNode.some(element => {
-                if (element===endNode){
+                if (element===endNode || j > totalCell){
                     // clearTimeout(animate)
                     flagDijkastra = false
                     return true
@@ -253,7 +254,7 @@ function allDijkastra(){
                     // getNeighbourDiv.setAttribute('isVisited',true)
                     visitedNodes.push(element)
                     newNeighbours = getNeighbours(element)
-                    newNeighbours = newNeighbours.filter(e => e > 0 && e < 1275 && e !== startNode && notVistedNode.includes(e))
+                    newNeighbours = newNeighbours.filter(e => e > 0 && e < totalCell && e !== startNode && notVistedNode.includes(e))
                     newNeighbours.forEach(function(individualNeighbour){
                         let newNeighbourDiv = getNodeDiv(individualNeighbour)
                         if (newNeighbourDiv.getAttribute('isVisited')==="false"){
@@ -267,7 +268,7 @@ function allDijkastra(){
             queue = queue.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
             })
-            neighbourOfCurrentNode = queue.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
+            neighbourOfCurrentNode = queue.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
             // },90*j)
             console.log(flagDijkastra)
             j++
@@ -281,7 +282,7 @@ function allDijkastra(){
         // animatePathDiv.setAttribute('isVisited',true)
         // },10*index)
         // })
-
+        vistedLength = visitedNodes.length
         visitedNodes.forEach(function(element,index){
             if(!startNodeDragging){
                 animate = setTimeout(function(){
@@ -323,11 +324,12 @@ function allDijkastra(){
         // clearInterval(animatePath)
     }
     dijkstra()
+
     wrapper = function(){
         animateShortestPath()
     }
     if(!startNodeDragging){
-        setTimeout(wrapper,8000)
+        setTimeout(wrapper,vistedLength*10)
     }
     else{
         setTimeout(wrapper,500)
@@ -373,7 +375,7 @@ grids.addEventListener("dragover", function(event) {
             event.target.classList.add('blocked')
         }
     }
-  }, false);
+}, false);
 
 grids.addEventListener("drop", function(event) {
     if (dragged.target.id === 'node' + startNode){
@@ -400,9 +402,10 @@ grids.addEventListener("drop", function(event) {
                     allAstar();
                     break;
                 case 'breadthfirst':
+                    startNodeDragging = true
                     clearBoard();
                     allDijkastra();
-                    break;
+                    startNodeDragging = false
                 case 'depthfirst':
                     clearBoard();
                     allDeapthFirstSearch()
@@ -432,16 +435,20 @@ grids.addEventListener("drop", function(event) {
             }
             switch (selectedAlgorithm) {
                 case 'dijkstra':
+                    startNodeDragging = true
                     clearBoard();
                     allDijkastra();
+                    startNodeDragging = false
                     break;
                 case 'astar':
                     clearBoard();
                     allAstar();
                     break;
                 case 'breadthfirst':
+                    startNodeDragging = true
                     clearBoard();
                     allDijkastra();
+                    startNodeDragging = false
                     break;
                 case 'depthfirst':
                     clearBoard();
@@ -597,7 +604,7 @@ function allAstar(){
         // endNodeVisited = endNodeDiv.getAttribute('isVisited')
         // console.log(endNodeVisited)
         let animate;
-        while(j<60)
+        while(j<totalCell/4)
         {
             // animate = setTimeout(function(){
             distanceGn = distanceGn + 1
@@ -648,7 +655,7 @@ function allAstar(){
         neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e => e > 0 && e < totalCell)
         j = 1
         let animate;
-        while(j<60)
+        while(j<totalCell/4)
         {
             // animate = setTimeout(function(){
             distanceHn = distanceHn + 1
@@ -755,5 +762,3 @@ function allAstar(){
     // getNodesInShortestPathOrder();
     animateShortestPathAStar();
 }
-
-
