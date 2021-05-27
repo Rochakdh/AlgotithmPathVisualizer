@@ -10,6 +10,10 @@ let totalCell = rows*columns
 let startNode;
 let endNode;
 let box;
+let currentAlgorithm;
+let previousBlockedArray;
+let previousStartEnd;
+let startNodeDragging = false;
 
 drawGrid = function() {
     for (var index = 0 ; index < totalCell; index++){
@@ -71,28 +75,19 @@ checkDraggedStartEnd = function(eventThrown){
         }
     return false
 }
-// function rightBoundary(index) {
-//     colCount = columns
-//     const colPosition = index % colCount;
-//     // const rowPosition = Math.floor(index / colCount);
-//     if (colPosition==(colCount-1)) {
-//         return true
-//     } else {
-//         return false
-//     } 
-// }
 
-// function leftBoundary(index) {
-//     colCount = columns
-//     const colPosition = index % colCount;
-//     // const rowPosition = Math.floor(index / colCount);
-//     if (colPosition==0) {
-//         return true
-//     } else {
-//         return false
-//     } 
-// }
-
+function isPathClaculated(){
+    for (var index = 1 ; index < totalCell; index++){
+        if (!rightBoundary(index) || !leftBoundary(index)){
+            pathDiv = getNodeDiv(index)
+            console.log(pathDiv)
+            if (pathDiv.getAttribute('isPath') === 'true'){
+                return true
+            }
+        }
+    }
+    return false 
+}
 
 getNeighbours = function(currentNode){
     let neighboour = []
@@ -126,30 +121,46 @@ function sealBoundary(index) {
     }   
 }
 
+function previousStateBlocks(){
+    for (var index = 0 ; index < totalCell; index++){
+        if (!rightBoundary(index) || !leftBoundary(index)){
+            blocked = getNodeDiv(index)
+            if (blocked.getAttribute('isBlocked') === 'true'){
+
+            }
+        }
+    }  
+
+
+
+
+}
+
 function clearBoard(){
     let boxClass = document.getElementsByClassName('box')
-    for (var index = 0 ; index < (rows*columns); index++){
+    for (var index = 0 ; index < totalCell; index++){
         boxClass[index].removeAttribute('distance')
         boxClass[index].removeAttribute('isVisited')
         boxClass[index].removeAttribute('isPath')
         boxClass[index].removeAttribute('previous')
-        boxClass[index].removeAttribute('isBlocked')
+        // boxClass[index].removeAttribute('isBlocked')
         boxClass[index].removeAttribute('distanceGn')
         boxClass[index].removeAttribute('distanceHn')
         boxClass[index].removeAttribute('isMazeVisted')
         boxClass[index].removeAttribute('previousLink')
+        // boxClass[index].classList.remove('blocked')
     }
+    console.log(boxClass)
 }
-
 drawGrid();
 startEndNodes();
 sealBoundary();
 
 function allDijkastra(){
-    
-    setDijkastraProperty= function(){
+    console.log('I am in')
+    setDijkastraProperty = function(){
         let boxClass = document.getElementsByClassName('box')
-        console.log(boxClass)
+        // console.log(boxClass)
         for (var index = 0 ; index < (rows*columns); index++){
             boxClass[index].setAttribute('distance',Infinity)
             boxClass[index].setAttribute('isVisited',false)
@@ -167,11 +178,11 @@ function allDijkastra(){
  
     //div attributes
     
-    let leftNode;
-    let rightNode;
-    let upNode;
-    let downNode;
-    let timeOut;
+    // let leftNode;
+    // let rightNode;
+    // let upNode;
+    // let downNode;
+    // let timeOut;
     
     getBoundary = function(){
       let boundaryNode = []
@@ -209,9 +220,10 @@ function allDijkastra(){
     }
     
     dijkstra = function(){
+        console.log("inside dijkstra")
         let notVistedNode = nonVisited()
         let startNodeDiv = getNodeDiv(startNode)
-        distance = 0
+        let distance = 0
         startNodeDiv.setAttribute('distance',distance)
         notVistedNode = notVistedNode.filter(e=>e !== startNode)
         let queue = []
@@ -220,23 +232,28 @@ function allDijkastra(){
         endNodeDiv = getNodeDiv(endNode)
         endNodeVisited = endNodeDiv.getAttribute('isVisited')
         let animate;
-        timeOut = 1
-        while(j<totalCell)
+        let flagDijkastra = true
+        let visitedNodes = []
+        // timeOut = 1
+        while(flagDijkastra)
         {
-            animate = setTimeout(function(){
+            // animate = setTimeout(function(){
             distance = distance + 1
+            console.log(distance)
             neighbourOfCurrentNode.some(element => {
                 if (element===endNode){
-                    j = totalCell + 1
+                    // clearTimeout(animate)
+                    flagDijkastra = false
                     return true
                 }
                 getNeighbourDiv = getNodeDiv(element)
                 isWall = getNeighbourDiv.getAttribute('isblocked')
                 if (isWall === 'false'){
                     getNeighbourDiv.setAttribute('distance',distance)
-                    getNeighbourDiv.setAttribute('isVisited',true)
+                    // getNeighbourDiv.setAttribute('isVisited',true)
+                    visitedNodes.push(element)
                     newNeighbours = getNeighbours(element)
-                    newNeighbours = newNeighbours.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
+                    newNeighbours = newNeighbours.filter(e => e > 0 && e < 1275 && e !== startNode && notVistedNode.includes(e))
                     newNeighbours.forEach(function(individualNeighbour){
                         let newNeighbourDiv = getNodeDiv(individualNeighbour)
                         if (newNeighbourDiv.getAttribute('isVisited')==="false"){
@@ -251,12 +268,35 @@ function allDijkastra(){
                 return index === self.indexOf(elem);
             })
             neighbourOfCurrentNode = queue.filter(e => e > 0 && e < 1275 && notVistedNode.includes(e))
-            },90*j)
+            // },90*j)
+            console.log(flagDijkastra)
             j++
-            timeOut ++;
+            console.log(j,totalCell)
         }
-        clearInterval(animate)
+        
+
+        // visitedNodes.forEach(function(element,index){
+        // animate = setTimeout(function(){
+        // animatePathDiv = getNodeDiv(element)
+        // animatePathDiv.setAttribute('isVisited',true)
+        // },10*index)
+        // })
+
+        visitedNodes.forEach(function(element,index){
+            if(!startNodeDragging){
+                animate = setTimeout(function(){
+                animatePathDiv = getNodeDiv(element)
+                animatePathDiv.setAttribute('isVisited',true)
+                },10*index)
+            }
+            else{
+                animatePathDiv = getNodeDiv(element)
+                animatePathDiv.setAttribute('isVisited',true)
+            }
+        })
+        clearTimeout(animate)
     }
+
     function getNodesInShortestPathOrder() {
         const nodesInShortestPathOrder = [];
         let currentNode = endNode;
@@ -282,12 +322,17 @@ function allDijkastra(){
         })
         // clearInterval(animatePath)
     }
-
     dijkstra()
     wrapper = function(){
         animateShortestPath()
     }
-    setTimeout(wrapper,10*timeOut)
+    if(!startNodeDragging){
+        setTimeout(wrapper,8000)
+    }
+    else{
+        setTimeout(wrapper,500)
+    }
+  
 }
 
 
@@ -332,23 +377,87 @@ grids.addEventListener("dragover", function(event) {
 
 grids.addEventListener("drop", function(event) {
     if (dragged.target.id === 'node' + startNode){
-        getIdCurrent= event.target.id
-        getnodeNumber = parseInt(getIdCurrent.substring(4))
-        if (getnodeNumber !== endNode && !leftBoundary(getnodeNumber)
-        && !leftBoundary(getnodeNumber)){
-            dragged.target.classList.remove('start')
-            event.target.classList.add('start')
-            startNode = getnodeNumber 
+        console.log(currentAlgorithm)
+        checkPath = isPathClaculated()
+        if(checkPath){
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== endNode && !leftBoundary(getnodeNumber)
+            && !leftBoundary(getnodeNumber)){
+                dragged.target.classList.remove('start')
+                event.target.classList.add('start')
+                startNode = getnodeNumber 
+            }
+            switch (selectedAlgorithm) {
+                case 'dijkstra':
+                    startNodeDragging = true
+                    clearBoard();
+                    allDijkastra();
+                    startNodeDragging = false
+                    break;
+                case 'astar':
+                    clearBoard();
+                    allAstar();
+                    break;
+                case 'breadthfirst':
+                    clearBoard();
+                    allDijkastra();
+                    break;
+                case 'depthfirst':
+                    clearBoard();
+                    allDeapthFirstSearch()
+                    break;
+            }
         }
-        console.log(startNode)
+        else{
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== endNode && !leftBoundary(getnodeNumber)
+            && !leftBoundary(getnodeNumber)){
+                dragged.target.classList.remove('start')
+                event.target.classList.add('start')
+                startNode = getnodeNumber 
+            }  
+        }
     }
     else if (dragged.target.id === 'node' + endNode){
-        getIdCurrent= event.target.id
-        getnodeNumber = parseInt(getIdCurrent.substring(4))
-        if (getnodeNumber !== startNode  && !leftBoundary(getnodeNumber) && !leftBoundary(getnodeNumber)){
-            dragged.target.classList.remove('end')
-            event.target.classList.add('end')
-            endNode = getnodeNumber 
+        checkPath = isPathClaculated()
+        if(checkPath){
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== startNode  && !leftBoundary(getnodeNumber) && !leftBoundary(getnodeNumber)){
+                dragged.target.classList.remove('end')
+                event.target.classList.add('end')
+                endNode = getnodeNumber 
+            }
+            switch (selectedAlgorithm) {
+                case 'dijkstra':
+                    clearBoard();
+                    allDijkastra();
+                    break;
+                case 'astar':
+                    clearBoard();
+                    allAstar();
+                    break;
+                case 'breadthfirst':
+                    clearBoard();
+                    allDijkastra();
+                    break;
+                case 'depthfirst':
+                    clearBoard();
+                    allDeapthFirstSearch()
+                    break;
+            }
+
+        }
+        else{
+            getIdCurrent= event.target.id
+            getnodeNumber = parseInt(getIdCurrent.substring(4))
+            if (getnodeNumber !== startNode  && !leftBoundary(getnodeNumber) && !leftBoundary(getnodeNumber)){
+                dragged.target.classList.remove('end')
+                event.target.classList.add('end')
+                endNode = getnodeNumber 
+            }
         }
     }
     event.dataTransfer.dropEffect = "copy";
@@ -359,13 +468,14 @@ grids.addEventListener("drop", function(event) {
 btn.addEventListener('click', function(){
     switch (selectedAlgorithm) {
         case 'dijkstra':
+            console.log(selectedAlgorithm)
             allDijkastra();
             break;
         case 'astar':
             allAstar();
             break;
         case 'breadthfirst':
-            // allDeapthFirstSearch()
+            allDijkastra();
             break;
         case 'depthfirst':
             allDeapthFirstSearch()
@@ -378,7 +488,6 @@ maze.addEventListener('click', function(){
 })
 
 clear.addEventListener('click', function(){
-    // clearBoard();
     location.reload();
 })
 
@@ -406,6 +515,7 @@ function allAstar(){
         }
     }
     setProperty();
+    
     let leftNode;
     let rightNode;
     let upNode;
@@ -571,9 +681,6 @@ function allAstar(){
     }
     
     
-    function hasDuplicates(array) {
-        return (new Set(array)).size !== array.length;
-    }
     function getTotalCost(element){
         // console.log(element)
         elementDiv = getNodeDiv(element)

@@ -57,8 +57,10 @@ function generateRandomMaze(){
                 poppedElement = vistedTracker.pop()
                 console.log(poppedElement)
                 poppedDiv = getNodeDiv(poppedElement)
-                poppedDiv.setAttribute('isBlocked',true)
-                poppedDiv.classList.add('blocked')
+                if(poppedElement!==startNode && poppedElement!==endNode){
+                    poppedDiv.setAttribute('isBlocked',true)
+                    poppedDiv.classList.add('blocked')
+                }
             }
             eachElementNeighbour = getNeighbours(vistedTracker[vistedTracker.length-1])
             startCell++

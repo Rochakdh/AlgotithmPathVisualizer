@@ -10,11 +10,11 @@
     background-size: 100% 100%;
 }
 .blocked {
-    background-color: black;
+    background-color: black !important;
     -webkit-animation-name: wallVisited;
     -webkit-animation-duration: 1s;
     -webkit-animation-timing-function: ease-out;
-    border: black;
+    /* border: black; */
 }
 .boundary {
     border: none;
@@ -62,7 +62,7 @@ div[isVisited="true"] {
 }
 div[ispath="true"]{
     /* border:rgb(208, 255, 0) ; */
-    background-color: rgb(208, 255, 0);
+    background-color: rgb(208, 255, 0) !important;
     -webkit-animation-name: isPath;
     -webkit-animation-duration: 1s;
     -webkit-animation-timing-function: ease-out;

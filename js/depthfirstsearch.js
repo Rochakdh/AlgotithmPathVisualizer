@@ -38,15 +38,6 @@ function allDeapthFirstSearch(){
         }
     }
 
-    getIndexOfFilteredItem= function(arrayFiltered)
-    {
-        var newArr = arrayFiltered.reduce(function(acc, curr, index) {
-            if (getNodeDiv(curr).getAttribute('isVisited') ==='false' || getNodeDiv(e).getAttribute('isBlocked') ==='false'){
-              acc.push(index);
-            }
-            return acc;
-        }, []);
-    }
     function deapthFirstSearch() {
         let firstNode = startNode
         let vistedTracker = [firstNode]
@@ -56,17 +47,16 @@ function allDeapthFirstSearch(){
         startCell = 1 
         pointer = firstNode
         indexFlag = 0
-        while(true){ 
-            // animate = setInterval(function(){
+        breakFlag = false
+        while(startCell<totalCell){ 
+            animate = setTimeout(function(){
                 distance = distance + 1
                 eachElementNeighbour = eachElementNeighbour.filter (e => e > 0 && e < totalCell)
                 console.log(eachElementNeighbour)
-                if (!areAllNodeVisited(eachElementNeighbour)){
-                    // nextIndex = [0,1,2,3].filter(e=> e!== getIndexOfFilteredItem(eachElementNeighbour))
+                if (!areAllNodeVisited(eachElementNeighbour) && !breakFlag){
                     eachElementNeighbour = eachElementNeighbour.filter (e => getNodeDiv(e).getAttribute('isVisited') ==='false')
                     eachElementNeighbour = eachElementNeighbour.filter (e => getNodeDiv(e).getAttribute('isBlocked') ==='false')
                     selectOneNeighbours = eachElementNeighbour[indexFlag]
-                    // shuffled = shuffle(eachElementNeighbour)
                     downDiv = getNodeDiv(selectOneNeighbours)
                     downDiv.setAttribute('isVisited',true)
                     downDiv.setAttribute('distance',distance)
@@ -75,40 +65,38 @@ function allDeapthFirstSearch(){
                     vistedPath.push(selectOneNeighbours)
                     console.log(downDiv)
                     if (selectOneNeighbours === endNode){
-                        break;
+                        breakFlag = true
+                        animateDfs()
+                        clearTimeout(animate)
                     }
                 }
                 else{
-                    console.log(vistedPath)
-                    // indexFlag += 1
-                    // if (indexFlag>eachElementNeighbour.length){
-                    //     indexFlag = 0
-                    // }
                     vistedTracker.pop()
                 }
                 eachElementNeighbour = getNeighbours(vistedTracker[vistedTracker.length-1])
-            // },1000*startCell)
+            },100*startCell)
             startCell++
         }
     }
     animateDfs= function(){
-        j = 1
+        // j = 1
         vistedPath.forEach(function(element){
             // animate = setTimeout(function(){
                 downDiv = getNodeDiv(element)
+                // downDiv.setAttribute('isVisited',false)
                 downDiv.setAttribute('isPath',true)
-                downDiv.innerHTML = j
-                j++
+                // downDiv.innerHTML = j
+                // j++
                 // if(j>vistedPath.length){
                 //     setTimeout(animate)
                 // }
-            // },1000*j)
+            // },100*j)
         })
     }
     setDfsProperty()
     deapthFirstSearch()
     // wrapper = function(){
-    animateDfs()
+    //     animateDfs()
     // }
-    // setTimeout(wrapper,2000)
+    // setTimeout(wrapper,3000)
 }
