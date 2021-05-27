@@ -1,6 +1,9 @@
 button,#select-option,.slider{
     background-color: #FBDE44FF;
 }
+button:hover,#select-option:hover{
+    opacity: 0.7;
+}
 
 .menu{
     background-color:  #28334AFF ;

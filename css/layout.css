@@ -2,15 +2,18 @@
     height: 90px;
     width: 100%;
 }
+
 .menu-list{
     display: flex;
     justify-content: space-around;
     align-items: center;
     height: 100%;
 }
+
 li {
     list-style: none;
 }
+
 .grids{
     margin: 40px auto;
     display: grid;
@@ -18,6 +21,7 @@ li {
     column-gap: 0;
     overflow: hidden;
 }
+
 button,#select-option{
     width: 120px;
     height: 50px;
@@ -25,3 +29,4 @@ button,#select-option{
     border: none;
     cursor: pointer;
 }
+

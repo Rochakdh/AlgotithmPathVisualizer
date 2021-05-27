@@ -1,7 +1,6 @@
 function allAstar(){
     setProperty = function(){
         let boxClass = document.getElementsByClassName('box')
-        console.log(boxClass)
         for (var index = 0 ; index < (rows*columns); index++){
             boxClass[index].setAttribute('distanceGn',Infinity)
             boxClass[index].setAttribute('distanceHn',Infinity)
@@ -76,7 +75,7 @@ function allAstar(){
         let endNodeDiv = getNodeDiv(endNode)
         distanceHn = 0
         endNodeDiv.setAttribute('distanceHn',distanceHn)
-        notVistedNode = notVistedNode.filter(e=>e !== endNode)
+        notVistedNode = notVistedNode.filter(e => e !== endNode)
         let queue = []
         neighbourOfCurrentNode = getNeighbours(endNode)
         neighbourOfCurrentNode = neighbourOfCurrentNode.filter(e=>e>0 && e<totalCell)
@@ -123,7 +122,6 @@ function allAstar(){
     
     
     function getTotalCost(element){
-        // console.log(element)
         elementDiv = getNodeDiv(element)
         gN = elementDiv.getAttribute('distanceGn')
         hN = elementDiv.getAttribute('distanceHn')
@@ -135,7 +133,6 @@ function allAstar(){
         let nodesInShortestPathOrder = [];
         let visitedPath = []
         let currentNode = startNode;
-        // parseInt(currentNode) !== endNode
         j = 1 
         while (true) {
             if (parseInt(currentNode) === endNode)
