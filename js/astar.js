@@ -1,4 +1,5 @@
 function allAstar(){
+    let visitedPath = []
 
     function setProperty(){
         let boxClass = document.getElementsByClassName('box')
@@ -17,12 +18,11 @@ function allAstar(){
         }
     }
       
-    aStarCostFunction = function(costOf,node){
-        console.log(costOf,node)
+    function aStarCostFunction(costOf,node){
         let notVistedNode = nonVisited()
         let startNodeDiv = getNodeDiv(node)
-        distanceGn = 0
-        startNodeDiv.setAttribute(costOf,distanceGn)
+        distance = 0
+        startNodeDiv.setAttribute(costOf,distance)
         notVistedNode = notVistedNode.filter(e =>e !== node)
         let queue = []
         neighbourOfCurrentNode = getNeighbours(node)
@@ -30,12 +30,12 @@ function allAstar(){
         j = 1
         while(j<totalCell/4)
         {
-            distanceGn = distanceGn + 1
+            distance = distance + 1
             neighbourOfCurrentNode.forEach(element => {
                 getNeighbourDiv = getNodeDiv(element)
                 isWall = getNeighbourDiv.getAttribute('isblocked')
                 if (isWall === 'false'){
-                    getNeighbourDiv.setAttribute(costOf,distanceGn)
+                    getNeighbourDiv.setAttribute(costOf,distance)
                     newNeighbours = getNeighbours(element)
                     newNeighbours = newNeighbours.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
                     notVistedNode = notVistedNode.filter(e=>e !== element)
@@ -63,61 +63,65 @@ function allAstar(){
 
     function getNodesInShortestPathOrder() {
         let nodesInShortestPathOrder = [];
-        let visitedPath = []
         let currentNode = startNode;
         j = 1 
         while (true) {
-            if (parseInt(currentNode) === endNode)
-            {
-                break;  
-            } 
-            // animate =  setInterval(function(){
-                pathDiv = getNodeDiv(currentNode)
-                getAllNeighboursElements = getNeighbours(currentNode)
-                console.log(getAllNeighboursElements)
-                getAllNeighboursElements = getAllNeighboursElements.filter(e=> e > 0 && e < totalCell )
-                getAllNeighboursElements = getAllNeighboursElements.filter(e => getNodeDiv(e).getAttribute('isblocked') === 'false')
-                // getAllNeighboursElements = getAllNeighboursElements.filter(e=> getNodeDiv(e).getAttribute('isPath') === 'true')
-                getAllNeighboursElements.forEach(function(individualNeighbour){
-                    getIndividualNeighbourDiv = getNodeDiv(individualNeighbour)
-                    getIndividualNeighbourDiv.setAttribute('isVisited',true)
-                })
-                console.log(getAllNeighboursElements)
-                fixedNode = getAllNeighboursElements.reduce(function(e1,e2){
-                    e1Div = getTotalCost(e1)
-                    e2Div = getTotalCost(e2)
-                    if (e1Div !== e2Div){
-                        return ( e1Div < e2Div ? e1 : e2)
-                    }
-                    else{
-                        e1HnDiv = getNodeDiv(e1)
-                        hN1 = parseInt(e1HnDiv.getAttribute('distanceHn'))
-                        e2HnDiv = getNodeDiv(e2)
-                        hN2 = parseInt(e2HnDiv.getAttribute('distanceHn'))
-                        console.log(hN1,hN2)
-                        return ( hN1 < hN2  ? e1 : e2)
-                    }
-                }) 
-                console.log(fixedNode)
-                indexFixedNode = getAllNeighboursElements.indexOf(fixedNode)
-                nextNode = getAllNeighboursElements[indexFixedNode]
-                nodesInShortestPathOrder.push(nextNode)
-                currentNode = nextNode          
-            // },100*j)
-            j++  
+        if (parseInt(currentNode) === endNode)
+        {
+            break;  
+        } 
+            pathDiv = getNodeDiv(currentNode)
+            getAllNeighboursElements = getNeighbours(currentNode)
+            console.log(getAllNeighboursElements)
+            getAllNeighboursElements = getAllNeighboursElements.filter(e=> e > 0 && e < totalCell )
+            getAllNeighboursElements = getAllNeighboursElements.filter(e => getNodeDiv(e).getAttribute('isblocked') === 'false')
+            getAllNeighboursElements.forEach(function(individualNeighbour){
+                getIndividualNeighbourDiv = getNodeDiv(individualNeighbour)
+                visitedPath.push(individualNeighbour)
+            })
+            console.log(getAllNeighboursElements)
+            fixedNode = getAllNeighboursElements.reduce(function(e1,e2){
+                e1Div = getTotalCost(e1)
+                e2Div = getTotalCost(e2)
+                if (e1Div !== e2Div){
+                    return ( e1Div < e2Div ? e1 : e2)
+                }
+                else{
+                    e1HnDiv = getNodeDiv(e1)
+                    hN1 = parseInt(e1HnDiv.getAttribute('distanceHn'))
+                    e2HnDiv = getNodeDiv(e2)
+                    hN2 = parseInt(e2HnDiv.getAttribute('distanceHn'))
+                    console.log(hN1,hN2)
+                    return ( hN1 < hN2  ? e1 : e2)
+                }
+            }) 
+            console.log(fixedNode)
+            indexFixedNode = getAllNeighboursElements.indexOf(fixedNode)
+            nextNode = getAllNeighboursElements[indexFixedNode]
+            nodesInShortestPathOrder.push(nextNode)
+            currentNode = nextNode          
+        j++  
         }
-        // clearInterval(animate)
         return nodesInShortestPathOrder
     }
         
-        
-    animateShortestPathAStar  = function () {
+    function animateShortestPathAStar() {
         getPath = getNodesInShortestPathOrder()
         getPath.pop()
-        getPath.forEach(function(individualPath){
-            getPathDiv = getNodeDiv(individualPath)
-            getPathDiv.setAttribute('isPath',true)
+
+        visitedPath.forEach(function(element,index){
+            animateAstarPath = setTimeout(function(){
+                getPathDiv = getNodeDiv(element)
+                getPathDiv.setAttribute('isVisited',true)
+            },100*index)
         })
+        function animatePathAstar(){
+            getPath.forEach(function(individualPath){
+                getPathDiv = getNodeDiv(individualPath)
+                getPathDiv.setAttribute('isPath',true)
+            })
+        }
+        setTimeout(animatePathAstar, 100 * visitedPath.length)
     }
 
     setProperty();
