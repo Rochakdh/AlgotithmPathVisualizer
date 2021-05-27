@@ -1,9 +1,6 @@
 function allDeapthFirstSearch(){
     let distance = 0;
     let vistedPath = []
-    function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
-    }
     
     function areAllNodeVisited(nodeArray){
         initialVisit = 0 
@@ -21,7 +18,7 @@ function allDeapthFirstSearch(){
         }
     }
     
-    setDfsProperty= function(){
+    function setDfsProperty(){
         let boxClass = document.getElementsByClassName('box')
         console.log(boxClass)
         for (var index = 0 ; index < (rows*columns); index++){
@@ -72,30 +69,34 @@ function allDeapthFirstSearch(){
                     vistedTracker.pop()
                 }
                 eachElementNeighbour = getNeighbours(vistedTracker[vistedTracker.length-1])
-            // },100*startCell)
             startCell++
         }
         vistedPath.forEach(function(element,index){
-            animate = setTimeout(function(){
+            animateDfsVisited = setTimeout(function(){
                 downDiv = getNodeDiv(element)
                 downDiv.setAttribute('isVisited',true)
             },100*index)
         })
-        clearTimeout(animate)
+        clearTimeout(animateDfsVisited)
     }
-    animateDfs= function(){
+
+    function animateDfs(){
         vistedPath.forEach(function(element,index){
-            animate = setTimeout(function(){
+            animateShortestDfsPath = setTimeout(function(){
                 downDiv = getNodeDiv(element)
                 downDiv.setAttribute('isPath',true)
             },20*index)
         })
-        clearTimeout(animate)
+        clearTimeout(animateShortestDfsPath)
     }
+
     setDfsProperty()
     deapthFirstSearch()
+
     wrapper = function(){
+
         animateDfs()
     }
+
     setTimeout(wrapper,vistedPath.length*100)
 }

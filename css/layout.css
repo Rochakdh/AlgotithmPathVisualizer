@@ -23,10 +23,31 @@ li {
 }
 
 button,#select-option{
-    width: 120px;
-    height: 50px;
+    width: 150px;
+    height: 40px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
 }
 
+#warning-wrapper{
+    display: none;
+}
+
+.warning{
+    background-color: #28334AFF;
+    height: 200px;;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: auto;
+    color: #FBDE44FF;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom:0;
+    left: 0;
+    font-size: large;
+    -webkit-transition: all 1s ease;
+}

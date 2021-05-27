@@ -1,6 +1,8 @@
-let btn = document.getElementById('visualize')
+let btnVisualize = document.getElementById('visualize')
 let clear = document.getElementById('clear')
 let maze = document.getElementById('maze')
+let warning = document.getElementById('warning-wrapper')
+let okBtn = document.getElementById('ok')
 let dragged;
 
 function checkDroppableLocation(eventId, starOrEnd){
@@ -21,19 +23,26 @@ function switchCaseDuringDrag(){
             allDijkastra();
             startNodeDragging = false
             break;
+
         case 'astar':
             clearBoard();
             allAstar();
             break;
+
         case 'breadthfirst':
             startNodeDragging = true
             clearBoard();
             allDijkastra();
             startNodeDragging = false
+
         case 'depthfirst':
             clearBoard();
             allDeapthFirstSearch()
             break;
+
+        default:
+            console.log(warning)
+            warning.style.display = 'block';
     }
 }
 
@@ -93,21 +102,31 @@ grids.addEventListener("drop", function(event) {
     event.dataTransfer.dropEffect = "copy";
 }, false);
 
-btn.addEventListener('click', function(){
+btnVisualize.addEventListener('click', function(){
     switch (selectedAlgorithm) {
         case 'dijkstra':
             console.log(selectedAlgorithm)
+            clearBoard();
             allDijkastra();
             break;
+
         case 'astar':
+            clearBoard();
             allAstar();
             break;
+
         case 'breadthfirst':
+            clearBoard();
             allDijkastra();
             break;
+
         case 'depthfirst':
+            clearBoard();
             allDeapthFirstSearch()
             break;
+
+        default:
+            warning.style.display = 'block';
     }
 })
 
@@ -118,4 +137,9 @@ maze.addEventListener('click', function(){
 clear.addEventListener('click', function(){
     
     location.reload();
+})
+
+okBtn.addEventListener('click',function(){
+
+    warning.style.display = 'none';
 })

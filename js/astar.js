@@ -1,5 +1,5 @@
 function allAstar(){
-    setProperty = function(){
+    function setProperty(){
         let boxClass = document.getElementsByClassName('box')
         for (var index = 0 ; index < (rows*columns); index++){
             boxClass[index].setAttribute('distanceGn',Infinity)

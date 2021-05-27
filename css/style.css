@@ -1,12 +1,13 @@
 button,#select-option,.slider{
     background-color: #FBDE44FF;
 }
+
 button:hover,#select-option:hover{
     opacity: 0.7;
 }
 
 .menu{
-    background-color:  #28334AFF ;
+    background-color:#28334AFF ;
     color: white;
 }
 
@@ -72,8 +73,8 @@ div[isVisited="true"] {
         transform: scale(1);
     }
 }
+
 div[ispath="true"]{
-    /* border:rgb(208, 255, 0) ; */
     background-color: rgb(208, 255, 0) !important;
     -webkit-animation-name: isPath;
     -webkit-animation-duration: 1s;

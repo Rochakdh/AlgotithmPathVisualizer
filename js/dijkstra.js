@@ -1,5 +1,5 @@
 function allDijkastra(){
-
+    
     let vistedLength;
     let visitedNodes = []
 
