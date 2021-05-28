@@ -8,10 +8,19 @@ let dragged;
 function checkDroppableLocation(eventId, starOrEnd){
     getIdCurrent= eventId.target.id
     getnodeNumber = parseInt(getIdCurrent.substring(4))
-    if (getnodeNumber !== endNode && !leftBoundary(getnodeNumber) && !rightBoundary(getnodeNumber)){
-        dragged.target.classList.remove(starOrEnd)
-        eventId.target.classList.add(starOrEnd)
-        startNode = getnodeNumber 
+    if(starOrEnd==='end'){
+        if (!leftBoundary(getnodeNumber) && !rightBoundary(getnodeNumber) && getnodeNumber !== startNode ){
+            dragged.target.classList.remove(starOrEnd)
+            eventId.target.classList.add(starOrEnd)
+            endNode = getnodeNumber 
+        }
+    }
+    else{
+        if (!leftBoundary(getnodeNumber) && !rightBoundary(getnodeNumber) && getnodeNumber !== endNode ){
+            dragged.target.classList.remove(starOrEnd)
+            eventId.target.classList.add(starOrEnd)
+            startNode = getnodeNumber 
+        }
     }
 }
 
@@ -76,7 +85,6 @@ grids.addEventListener("dragover", function(event) {
 }, false);
 
 grids.addEventListener("drop", function(event) {
-
     checkPath = isPathClaculated()
     if (dragged.target.id === 'node' + startNode){
 
@@ -89,7 +97,6 @@ grids.addEventListener("drop", function(event) {
         }
     }
     else if (dragged.target.id === 'node' + endNode){
-        
         if(checkPath){
             checkDroppableLocation(event,'end');
             switchCaseDuringDrag();

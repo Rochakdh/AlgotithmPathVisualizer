@@ -94,9 +94,12 @@ function allDeapthFirstSearch(){
     deapthFirstSearch()
 
     wrapper = function(){
-
         animateDfs()
     }
-
-    setTimeout(wrapper,vistedPath.length*100)
+    if(!startNodeDragging){
+        setTimeout(wrapper,vistedPath.length*100)
+    }
+    else{
+        setTimeout(wrapper,500)
+    }
 }

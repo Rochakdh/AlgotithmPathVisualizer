@@ -1,9 +1,9 @@
 function allDijkastra(){
-    
+
     let vistedLength;
     let visitedNodes = []
 
-    setDijkastraProperty = function(){
+    function setDijkastraProperty(){
         let boxClass = document.getElementsByClassName('box')
         for (var index = 0 ; index < totalCell; index++){
             boxClass[index].setAttribute('distance',Infinity)
@@ -127,10 +127,9 @@ function allDijkastra(){
 
     if(!startNodeDragging){
 
-        setTimeout(shortestPath,vistedLength*10)
+        setTimeout(shortestPath,vistedLength*20)
     }
     else{
-
         setTimeout(shortestPath,500)
     }
   
