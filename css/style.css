@@ -75,7 +75,7 @@ div[isVisited="true"] {
 }
 
 div[ispath="true"]{
-    background-color: rgb(208, 255, 0) !important;
+    background-color: rgb(208, 255, 0) ;
     -webkit-animation-name: isPath;
     -webkit-animation-duration: 1s;
     -webkit-animation-timing-function: ease-out;

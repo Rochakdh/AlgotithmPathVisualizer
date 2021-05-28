@@ -62,7 +62,6 @@ function generateRandomMaze(){
             }
             else{
                 poppedElement = vistedTracker.pop()
-                console.log(poppedElement)
                 poppedDiv = getNodeDiv(poppedElement)
                 if(poppedElement!==startNode && poppedElement!==endNode){
                     poppedDiv.setAttribute('isBlocked',true)

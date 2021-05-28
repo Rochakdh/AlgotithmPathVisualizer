@@ -8,7 +8,7 @@ let dragged;
 function checkDroppableLocation(eventId, starOrEnd){
     getIdCurrent= eventId.target.id
     getnodeNumber = parseInt(getIdCurrent.substring(4))
-    if(starOrEnd==='end'){
+    if(starOrEnd === 'end'){
         if (!leftBoundary(getnodeNumber) && !rightBoundary(getnodeNumber) && getnodeNumber !== startNode ){
             dragged.target.classList.remove(starOrEnd)
             eventId.target.classList.add(starOrEnd)
@@ -27,6 +27,7 @@ function checkDroppableLocation(eventId, starOrEnd){
 function switchCaseDuringDrag(){
     switch (selectedAlgorithm) {
         case 'dijkstra':
+        case 'breadthfirst':
             startNodeDragging = true
             clearBoard();
             allDijkastra();
@@ -38,11 +39,31 @@ function switchCaseDuringDrag(){
             allAstar();
             break;
 
-        case 'breadthfirst':
+        case 'depthfirst':
             startNodeDragging = true
             clearBoard();
-            allDijkastra();
+            allDeapthFirstSearch()
             startNodeDragging = false
+            break;
+
+        default:
+            warning.style.display = 'block';
+    }
+}
+
+function switchCaseWithoutDrag(){
+    switch (selectedAlgorithm) {
+
+        case 'dijkstra':
+        case 'breadthfirst':
+            clearBoard();
+            allDijkastra();
+            break;
+
+        case 'astar':
+            clearBoard();
+            allAstar();
+            break;
 
         case 'depthfirst':
             clearBoard();
@@ -50,20 +71,32 @@ function switchCaseDuringDrag(){
             break;
 
         default:
-            console.log(warning)
             warning.style.display = 'block';
     }
 }
 
 document.addEventListener('mouseup',function(event){
     if (checkDraggedStartEnd(event)){
-        if ( event.target.getAttribute('isBlocked')==='false'){
-            event.target.classList.add('blocked')
-            event.target.setAttribute('isBlocked',true)
+        if(!isPathVisited() || !isPathClaculated()){
+            if ( event.target.getAttribute('isBlocked') === 'false' ){
+                event.target.classList.add('blocked')
+                event.target.setAttribute('isBlocked',true)
+            }
+            else{
+                event.target.classList.remove('blocked')
+                event.target.setAttribute('isBlocked',false)
+            }
         }
         else{
-            event.target.classList.remove('blocked')
-            event.target.setAttribute('isBlocked',false)
+            if ( event.target.getAttribute('isBlocked') === 'false' ){
+                event.target.classList.add('blocked')
+                event.target.setAttribute('isBlocked',true)
+            }
+            else{
+                event.target.classList.remove('blocked')
+                event.target.setAttribute('isBlocked',false)
+            }
+            switchCaseDuringDrag();
         }
     }
 })
@@ -71,15 +104,33 @@ document.addEventListener('mouseup',function(event){
 document.addEventListener("dragstart", function(event) {
     event.dataTransfer.effectAllowed = "copy";
     dragged = event;
-    console.log(dragged)
 }, false);
 
 grids.addEventListener("dragover", function(event) {
     event.preventDefault();
     if ((dragged.target.id !== 'node' + startNode) && (dragged.target.id !== 'node' + endNode)){
         if (checkDraggedStartEnd(event)){
-            event.target.setAttribute('isBlocked',true)
-            event.target.classList.add('blocked')
+            if(!isPathVisited() || !isPathClaculated()){
+                if ( event.target.getAttribute('isBlocked') === 'false' ){
+                    event.target.classList.add('blocked')
+                    event.target.setAttribute('isBlocked',true)
+                }
+                else{
+                    event.target.classList.remove('blocked')
+                    event.target.setAttribute('isBlocked',false)
+                }
+            }
+            else{
+                if ( event.target.getAttribute('isBlocked') === 'false' ){
+                    event.target.classList.add('blocked')
+                    event.target.setAttribute('isBlocked',true)
+                }
+                else{
+                    event.target.classList.remove('blocked')
+                    event.target.setAttribute('isBlocked',false)
+                }
+                switchCaseDuringDrag();
+            }
         }
     }
 }, false);
@@ -100,7 +151,6 @@ grids.addEventListener("drop", function(event) {
         if(checkPath){
             checkDroppableLocation(event,'end');
             switchCaseDuringDrag();
-
         }
         else{
             checkDroppableLocation(event,'end');
@@ -110,31 +160,7 @@ grids.addEventListener("drop", function(event) {
 }, false);
 
 btnVisualize.addEventListener('click', function(){
-    switch (selectedAlgorithm) {
-        case 'dijkstra':
-            console.log(selectedAlgorithm)
-            clearBoard();
-            allDijkastra();
-            break;
-
-        case 'astar':
-            clearBoard();
-            allAstar();
-            break;
-
-        case 'breadthfirst':
-            clearBoard();
-            allDijkastra();
-            break;
-
-        case 'depthfirst':
-            clearBoard();
-            allDeapthFirstSearch()
-            break;
-
-        default:
-            warning.style.display = 'block';
-    }
+    switchCaseWithoutDrag()
 })
 
 maze.addEventListener('click', function(){
@@ -150,3 +176,4 @@ okBtn.addEventListener('click',function(){
 
     warning.style.display = 'none';
 })
+

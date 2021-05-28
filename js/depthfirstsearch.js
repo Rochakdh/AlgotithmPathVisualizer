@@ -71,13 +71,17 @@ function allDeapthFirstSearch(){
                 eachElementNeighbour = getNeighbours(vistedTracker[vistedTracker.length-1])
             startCell++
         }
+    }
+
+    function animateDfsVisited(){
         vistedPath.forEach(function(element,index){
             animateDfsVisited = setTimeout(function(){
                 downDiv = getNodeDiv(element)
                 downDiv.setAttribute('isVisited',true)
-            },100*index)
+            },10*index)
         })
         clearTimeout(animateDfsVisited)
+
     }
 
     function animateDfs(){
@@ -90,16 +94,25 @@ function allDeapthFirstSearch(){
         clearTimeout(animateShortestDfsPath)
     }
 
+    function dfsWithoutAnimation(){
+        vistedPath.forEach(function(element,index){
+                downDiv = getNodeDiv(element)
+                downDiv.setAttribute('isPath',true)
+        })
+    }
+
     setDfsProperty()
     deapthFirstSearch()
-
-    wrapper = function(){
-        animateDfs()
-    }
+    // wrapper = function(){
+    //     animateDfs()
+    // }
     if(!startNodeDragging){
-        setTimeout(wrapper,vistedPath.length*100)
+        animateDfsVisited()
+        setTimeout(animateDfs(),vistedPath.length*10)
     }
     else{
-        setTimeout(wrapper,500)
+        
+        dfsWithoutAnimation()
+        animateDfs()
     }
 }

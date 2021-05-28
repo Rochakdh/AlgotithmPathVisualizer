@@ -2,8 +2,6 @@ function allDijkastra(){
 
     let vistedLength;
     let visitedNodes = []
-    let animate;
-    let pathAnimate;
 
     function setDijkastraProperty(){
         let boxClass = document.getElementsByClassName('box')
@@ -23,6 +21,7 @@ function allDijkastra(){
     }
     
     function animatePath(){
+        let animate;
         vistedLength = visitedNodes.length
         visitedNodes.forEach(function(element,index){
             if(!startNodeDragging){
@@ -40,6 +39,7 @@ function allDijkastra(){
     }
 
     function dijkstra(){
+
         let notVistedNode = nonVisited()
         let startNodeDiv = getNodeDiv(startNode)
         let distance = 0
@@ -57,7 +57,7 @@ function allDijkastra(){
         {
             distance = distance + 1
             neighbourOfCurrentNode.some(element => {
-                if (element === endNode || cellStart > totalCell){
+                if (element===endNode || cellStart > totalCell){
                     flagDijkastra = false
                     return true
                 }
@@ -85,7 +85,7 @@ function allDijkastra(){
             neighbourOfCurrentNode = queue.filter(e => e > 0 && e < totalCell && notVistedNode.includes(e))
             cellStart++
         }
-        animatePath();
+        // animatePath();
     }
 
     function getNodesInShortestPathOrder() {
@@ -124,10 +124,10 @@ function allDijkastra(){
 
     if(!startNodeDragging){
 
-        pathAnimate = setTimeout(shortestPath,vistedLength*20)
+        setTimeout(shortestPath,vistedLength*20)
     }
     else{
-        pathAnimate =setTimeout(shortestPath,500)
+        setTimeout(shortestPath,500)
     }
   
 }

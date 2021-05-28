@@ -1,50 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Algorithm Visual</title>
-    <link rel="stylesheet" type="text/css" href="./css/reset.css">
-    <link rel="stylesheet" type="text/css" href="./css/layout.css">
-    <link rel="stylesheet" type="text/css" href="./css/style.css">
-</head>
-<body>
+    <link rel="stylesheet" type="text/css" href="./css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="./css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+  </head>
+  <body>
     <div class="conatiner">
-        <div class="menu">
-            <ul class="menu-list">
-                <li>
-                    <select id="select-option">
-                        <option value="">Algorithm</option>
-                        <option value="dijkstra">Dijkstra</option>
-                        <option value="astar">A *</option>
-                        <option value="breadthfirst">B.F.S</option>
-                        <option value="depthfirst">D.F.S</option>
-                    </select>
-                </li>
-                <li><button id="visualize">Visualize</button></li>
-                <li><button id="maze">Generate Maze Walls</button></li>
-                <li><button id="clear">Clear</button></li>
-                <li>Rows:<input class="slider" id="rows" type="range" min="10" max="30" value="15" ></li>
-                <li>CellSize:<input class="slider" id="cell-size" type="range" min="10" max="30" value="25"></li>
-            </ul>
+      <div class="menu">
+        <ul class="menu-list">
+          <li>
+            <select id="select-option">
+              <option value="">Algorithm</option>
+              <option value="dijkstra">Dijkstra</option>
+              <option value="astar">A *</option>
+              <option value="breadthfirst">B.F.S</option>
+              <option value="depthfirst">D.F.S</option>
+            </select>
+          </li>
+          <li><button id="visualize">Visualize</button></li>
+          <li><button id="maze">Generate Maze Walls</button></li>
+          <li><button id="clear">Clear</button></li>
+          <li>
+            Rows:<input
+              class="slider"
+              id="rows"
+              type="range"
+              min="10"
+              max="30"
+              value="15"
+            />
+          </li>
+          <li>
+            CellSize:<input
+              class="slider"
+              id="cell-size"
+              type="range"
+              min="10"
+              max="30"
+              value="25"
+            />
+          </li>
+        </ul>
+      </div>
+      <div class="grids"></div>
+      <div id="warning-wrapper">
+        <div class="warning" id="algorithm-warning">
+          Please Select Algorithm First
+          <button id="ok">Ok</button>
         </div>
-        <div class="grids">
-        </div>
-        <div id="warning-wrapper">
-            <div class="warning" id="algorithm-warning">
-                Please Select Algorithm First
-                <button id="ok">Ok</button>
-            </div>
-        </div>
+      </div>
     </div>
-    <script src="js/dropdown.js"> </script>
-    <script src="js/index.js"> </script>
-    <script src="js/maze.js"> </script>
-    <script src="js/slider.js"> </script>
-    <script src="js/depthfirstsearch.js"> </script>
-    <script src="js/dijkstra.js"> </script>
-    <script src="js/astar.js"> </script>
-    <script src="js/eventlistner.js"> </script>
-
-</body>
+    <script src="js/dropdown.js"></script>
+    <script src="js/slider.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/maze.js"></script>
+    <script src="js/depthfirstsearch.js"></script>
+    <script src="js/dijkstra.js"></script>
+    <script src="js/astar.js"></script>
+    <script src="js/eventlistner.js"></script>
+  </body>
 </html>
