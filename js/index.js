@@ -1,7 +1,7 @@
 const grids = document.querySelector(".grids");
 let boxSize = 25;
-let rows = rowSize.value;
-const columns = Math.floor(window.innerWidth / boxSize);
+let rows = 15;
+let columns = Math.floor(window.innerWidth / boxSize);
 
 grids.style.setProperty("grid-template-columns", `repeat(${columns}, 1fr)`);
 grids.style.setProperty("grid-template-rows", `repeat(${rows}, 1fr)`);
@@ -108,7 +108,7 @@ function getNeighbours(currentNode) {
   return neighboour;
 }
 
-function sealBoundary(index) {
+function sealBoundary() {
   for (var index = 0; index < totalCell; index++) {
     if (rightBoundary(index) || leftBoundary(index)) {
       getBoundaryDiv = getNodeDiv(index);
