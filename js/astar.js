@@ -114,19 +114,36 @@ function allAstar() {
       animateAstarPath = setTimeout(function () {
         getPathDiv = getNodeDiv(element);
         getPathDiv.setAttribute("isVisited", true);
-      }, 100 * index);
+      }, 30 * index);
     });
-    function animatePathAstar() {
-      getPath.forEach(function (individualPath) {
-        getPathDiv = getNodeDiv(individualPath);
-        getPathDiv.setAttribute("isPath", true);
-      });
-    }
-    setTimeout(animatePathAstar, 100 * visitedPath.length);
+  }
+
+  function animatePathAstar() {
+    getPath.forEach(function (individualPath) {
+      getPathDiv = getNodeDiv(individualPath);
+      getPathDiv.setAttribute("isPath", true);
+    });
+  }
+
+  function planeShortestPathAStar() {
+    getPath = getNodesInShortestPathOrder();
+    getPath.pop();
+
+    visitedPath.forEach(function (element) {
+      getPathDiv = getNodeDiv(element);
+      getPathDiv.setAttribute("isVisited", true);
+    });
   }
 
   setProperty();
   aStarCostFunction("distanceGn", startNode);
   aStarCostFunction("distanceHn", endNode);
   animateShortestPathAStar();
+  if (!startNodeDragging) {
+    animateShortestPathAStar();
+    setTimeout(animatePathAstar, 30 * visitedPath.length);
+  } else {
+    planeShortestPathAStar();
+    animatePathAstar();
+  }
 }
