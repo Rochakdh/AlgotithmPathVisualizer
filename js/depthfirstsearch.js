@@ -51,7 +51,6 @@ function allDeapthFirstSearch() {
       eachElementNeighbour = eachElementNeighbour.filter(
         (e) => e > 0 && e < totalCell
       );
-      console.log(eachElementNeighbour);
       if (!areAllNodeVisited(eachElementNeighbour) && !breakFlag) {
         eachElementNeighbour = eachElementNeighbour.filter(
           (e) => getNodeDiv(e).getAttribute("previouslyVisited") === "false"
